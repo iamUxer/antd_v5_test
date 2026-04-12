@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ant Design v5 — 적응형 레이아웃</title>
+    <!-- 내용·색상은 vite `inject-theme-first-paint`가 `canvasBackground.ts` 값으로 채움 -->
+    <script id="theme-first-paint"></script>
+    <style>
+      html[data-theme="dark"] {
+        color-scheme: dark;
+      }
+      html[data-theme="light"],
+      html:not([data-theme]) {
+        color-scheme: light;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

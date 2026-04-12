@@ -1,0 +1,15 @@
+/*
+ * html 배경색: 첫 페인트 스크립트 + `syncDocumentLayoutBackground`가 `canvasBackground.ts`와 동일 값으로 설정.
+ * body·#root는 투명으로 두어 이중 칠을 피함.
+ */
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body,
+#root {
+  background: transparent;
+}
