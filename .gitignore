@@ -2,3 +2,9 @@ node_modules
 dist
 *.local
 .DS_Store
+
+# 개인 금융 데이터 (커밋 제외)
+card_analysis.json
+public/spending_report.html
+src/spending_report.html
+uploads/
