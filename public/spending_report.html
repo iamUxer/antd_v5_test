@@ -1,372 +1,545 @@
 <!DOCTYPE html>
-<html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>2025 전체 지출 분석</title>
+<html lang="ko"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2025 월별 지출 분석</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:#0d0d14;color:#e2e8f0;min-height:100vh}
-.hero{background:linear-gradient(135deg,#1a1033,#2d1b69 50%,#1a1033);padding:48px 24px 64px;text-align:center}
-.hero h1{font-size:28px;font-weight:800;color:#fff;margin-bottom:6px}
-.hero p{color:#a5b4fc;font-size:13px;margin-bottom:32px}
-.kpi-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.kpi{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:16px 22px;min-width:140px;text-align:center}
-.kpi .lbl{font-size:10px;color:#818cf8;letter-spacing:.8px;text-transform:uppercase;margin-bottom:5px}
-.kpi .val{font-size:19px;font-weight:800;color:#fff}
-.kpi .sub{font-size:10px;color:#64748b;margin-top:3px}
-.notice{max-width:860px;margin:16px auto 0;background:#150e38;border:1px solid #3730a3;border-radius:10px;padding:12px 16px;font-size:11.5px;color:#818cf8;line-height:1.7}
-.main{max-width:1080px;margin:0 auto;padding:28px 18px}
-.sec{font-size:16px;font-weight:700;color:#e2e8f0;margin:36px 0 14px;border-left:4px solid #6366f1;padding-left:10px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:4px}
-@media(max-width:680px){.grid2{grid-template-columns:1fr}}
-.cc{background:#17172a;border:1px solid #252540;border-radius:14px;padding:20px}
-.cc h3{font-size:12px;color:#475569;margin-bottom:12px}
-.cw{position:relative;height:250px}
-.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px}
-.cat-card{background:#17172a;border:1px solid #252540;border-radius:12px;padding:16px;transition:border-color .2s}
+body{font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:#0d0d14;color:#e2e8f0}
+
+/* ─── Hero ─── */
+.hero{background:linear-gradient(140deg,#0f0a2e,#1e1060 50%,#0f0a2e);padding:52px 20px 68px;text-align:center}
+.hero h1{font-size:26px;font-weight:800;color:#fff;margin-bottom:6px}
+.hero p{color:#818cf8;font-size:13px;margin-bottom:40px}
+
+.total-box{display:inline-block;background:rgba(99,102,241,.15);border:2px solid #6366f1;border-radius:20px;padding:24px 40px;margin-bottom:28px}
+.total-lbl{font-size:12px;color:#818cf8;letter-spacing:.5px;margin-bottom:6px}
+.total-val{font-size:42px;font-weight:900;color:#fff;letter-spacing:-1px}
+.total-sub{font-size:12px;color:#64748b;margin-top:6px}
+
+.kpi-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.kpi{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px 20px;min-width:130px;text-align:center}
+.kpi .l{font-size:10px;color:#6366f1;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.kpi .v{font-size:18px;font-weight:800;color:#fff}
+.kpi .s{font-size:10px;color:#475569;margin-top:3px}
+
+/* ─── Main ─── */
+.main{max-width:1060px;margin:0 auto;padding:28px 16px 48px}
+.sec{font-size:15px;font-weight:700;margin:36px 0 14px;border-left:4px solid #6366f1;padding-left:10px}
+
+/* ─── Charts ─── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:660px){.g2{grid-template-columns:1fr}}
+.cbox{background:#13132a;border:1px solid #1f1f3a;border-radius:14px;padding:18px}
+.cbox h3{font-size:11px;color:#475569;margin-bottom:12px;font-weight:600}
+.cw{position:relative;height:240px}
+
+/* ─── 고정비 박스 ─── */
+.fix-box{background:#13132a;border:1px solid #1f1f3a;border-radius:14px;padding:20px}
+.fix-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.fix-title{font-size:14px;font-weight:700}
+.fix-total{font-size:20px;font-weight:800;color:#22c55e}
+.fix-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #1f1f3a;font-size:13px}
+.fix-row:last-child{border:none}
+.fix-ico{font-size:18px;width:24px;text-align:center}
+.fix-nm{flex:1;color:#94a3b8}
+.fix-amt{font-weight:700;color:#e2e8f0}
+.fix-note{font-size:10px;color:#374151;margin-top:10px}
+
+/* ─── 카테고리 그리드 ─── */
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.cat-card{background:#13132a;border:1px solid #1f1f3a;border-radius:12px;padding:16px;transition:border-color .2s}
 .cat-card:hover{border-color:#6366f1}
-.cat-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.cat-icon{font-size:22px}
-.cat-name{font-size:13px;font-weight:700}
-.cat-sub{font-size:10px;color:#475569;margin-top:1px}
-.cat-amt{margin-left:auto;font-size:15px;font-weight:800;color:#818cf8;white-space:nowrap}
-.bar-bg{background:#1e2035;border-radius:4px;height:5px;overflow:hidden;margin-bottom:4px}
-.bar-fg{height:5px;border-radius:4px;background:linear-gradient(90deg,#6366f1,#a78bfa)}
-.cat-pct{font-size:10px;color:#6366f1;font-weight:600;margin-bottom:6px}
-.monthly-chips{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}
-.chip{font-size:9px;background:#1e2035;border-radius:4px;padding:2px 6px;color:#475569}
-details summary{font-size:10px;color:#6366f1;cursor:pointer;user-select:none}
-.mr-list{margin-top:6px;display:flex;flex-direction:column;gap:4px}
-.mr{display:flex;justify-content:space-between;font-size:10px;padding:2px 0;border-bottom:1px solid #1e2035;color:#64748b}
-.mr b{color:#e2e8f0}
-.ins-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
-.ins{background:#17172a;border:1px solid #252540;border-radius:12px;padding:16px}
-.ins-ico{font-size:24px;margin-bottom:8px}
-.ins-lbl{font-size:10px;color:#475569;margin-bottom:3px}
-.ins-val{font-size:16px;font-weight:800}
-.ins-desc{font-size:10px;color:#475569;margin-top:5px;line-height:1.6}
-.card-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #252540}
-.cn{font-size:13px;font-weight:700}
-.cc2{font-size:10px;color:#475569;margin-top:2px}
-.ca{font-size:16px;font-weight:800}
-footer{text-align:center;padding:28px;color:#374151;font-size:10px}
+.cat-top{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
+.ico{font-size:22px;margin-top:1px}
+.cat-info{flex:1}
+.cat-nm{font-size:13px;font-weight:700;color:#e2e8f0}
+.cat-sub{font-size:10px;color:#475569;margin-top:2px}
+.cat-avg{text-align:right;white-space:nowrap}
+.avg-val{font-size:17px;font-weight:800;color:#818cf8}
+.avg-lbl{font-size:10px;color:#475569;margin-top:2px}
+.bar-bg{background:#1a1a35;border-radius:4px;height:5px;overflow:hidden}
+.bar-fg{height:5px;background:linear-gradient(90deg,#6366f1,#a78bfa)}
+.bar-meta{font-size:10px;color:#374151;margin:4px 0 8px;text-align:right}
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}
+.chip{font-size:9px;background:#1a1a35;border-radius:4px;padding:2px 6px;color:#475569;line-height:1.5}
+.chip b{color:#94a3b8;font-weight:600}
+details summary{font-size:10px;color:#4f46e5;cursor:pointer;user-select:none}
+.mer-list{margin-top:6px;display:flex;flex-direction:column;gap:3px}
+.mr{display:flex;justify-content:space-between;font-size:10px;padding:3px 0;border-bottom:1px solid #1a1a35;color:#64748b}
+.mr span:last-child{font-weight:600;color:#e2e8f0}
+
+footer{text-align:center;padding:24px;color:#374151;font-size:10px}
 </style>
 </head><body>
+
 <div class="hero">
-  <h1>💳 2025년 전체 지출 분석</h1>
-  <p>신한카드 · 국민카드 · 현대카드 · 신한은행 출금 통합 | 2025.01.01 ~ 2025.12.31</p>
-  <div class="kpi-row">
-    <div class="kpi"><div class="lbl">카드 연간 합계</div><div class="val">31,174,231원</div><div class="sub">3카드 실측</div></div>
-    <div class="kpi"><div class="lbl">Q4 월평균 (실측)</div><div class="val">4,597,173원</div><div class="sub">10~12월 평균</div></div>
-    <div class="kpi"><div class="lbl">최대 지출월</div><div class="val">8월</div><div class="sub">5,316,686원</div></div>
-    <div class="kpi"><div class="lbl">총 거래 건수</div><div class="val">968건</div><div class="sub">카드+은행</div></div>
+  <h1>📊 2025년 한 달 평균 지출 분석</h1>
+  <p>신한카드 · 국민카드 · 현대카드 + 고정 지출 통합</p>
+  <div class="total-box">
+    <div class="total-lbl">한 달 평균 총 지출</div>
+    <div class="total-val">3,854,442원</div>
+    <div class="total-sub">카드 월평균 1,971,070원 + 고정비 1,883,372원</div>
   </div>
-  <div class="notice">⚠️ <b>은행 출금 데이터는 9.25~12.30만 존재</b>합니다. 1~9월은 카드 지출만 포함되며, 회색 막대(고정비 추정 188만원/월)는 월세·할부·보험료를 추정한 값입니다. <b>Q4(10~12월) 데이터가 가장 정확한 실제 지출 기준</b>입니다.</div>
+  <div class="kpi-row">
+    <div class="kpi"><div class="l">카드 연간 합계</div><div class="v">23,652,845원</div><div class="s">3카드 실측</div></div>
+    <div class="kpi"><div class="l">카드 월평균</div><div class="v">1,971,070원</div><div class="s">÷12개월</div></div>
+    <div class="kpi"><div class="l">고정비 (매월 동일)</div><div class="v">1,883,372원</div><div class="s">은행 출금 기준</div></div>
+    <div class="kpi"><div class="l">연간 추정 총액</div><div class="v">46,253,304원</div><div class="s">월평균 × 12</div></div>
+  </div>
 </div>
+
 <div class="main">
 
-<div class="sec">📊 월별 지출 현황</div>
-<div class="grid2">
-  <div class="cc"><h3>월별 지출 구성</h3><div class="cw"><canvas id="monthlyChart"></canvas></div></div>
-  <div class="cc"><h3>카테고리 비중</h3><div class="cw"><canvas id="donutChart"></canvas></div></div>
+<div class="sec">📈 월별 카드 실제 지출</div>
+<div class="g2">
+  <div class="cbox"><h3>월별 총 카드 지출 (고정비 제외, 실측)</h3><div class="cw"><canvas id="ch1"></canvas></div></div>
+  <div class="cbox"><h3>카드별 월별 지출</h3><div class="cw"><canvas id="ch2"></canvas></div></div>
 </div>
 
-<div class="sec">💳 카드별 현황</div>
-<div class="grid2">
-  <div class="cc"><h3>카드별 월별 지출</h3><div class="cw"><canvas id="cardChart"></canvas></div></div>
-  <div class="cc" style="display:flex;align-items:center">
-    <div style="width:100%">
-      <h3 style="margin-bottom:16px">카드별 연간 합계</h3>
-      <div class="card-row"><div><div class="cn">신한카드</div><div class="cc">491건</div></div><div class="ca" style="color:#6366f1">14,407,646원</div></div><div class="card-row"><div><div class="cn">국민카드</div><div class="cc">370건</div></div><div class="ca" style="color:#22c55e">8,318,379원</div></div><div class="card-row"><div><div class="cn">현대카드</div><div class="cc">44건</div></div><div class="ca" style="color:#f59e0b">926,820원</div></div>
-      <div style="margin-top:12px;text-align:right;font-size:15px;font-weight:800;color:#818cf8">합계 23,652,845원</div>
+<div class="sec">🔒 고정 지출 — 매달 1,883,372원</div>
+<div class="fix-box">
+  <div class="fix-header">
+    <div class="fix-title">고정비 내역 (은행 출금, 매월 동일)</div>
+    <div class="fix-total">1,883,372원/월</div>
+  </div>
+  <div class="fix-row"><span class="fix-ico">🏠</span><span class="fix-nm">월세</span><span class="fix-amt">996,000원</span></div><div class="fix-row"><span class="fix-ico">🚗</span><span class="fix-nm">BMW 할부</span><span class="fix-amt">697,821원</span></div><div class="fix-row"><span class="fix-ico">🛡️</span><span class="fix-nm">자동차보험</span><span class="fix-amt">101,681원</span></div><div class="fix-row"><span class="fix-ico">🛡️</span><span class="fix-nm">손해보험(하나)</span><span class="fix-amt">20,280원</span></div><div class="fix-row"><span class="fix-ico">💊</span><span class="fix-nm">의료보험(KB)</span><span class="fix-amt">26,690원</span></div><div class="fix-row"><span class="fix-ico">❤️</span><span class="fix-nm">기부/후원</span><span class="fix-amt">27,000원</span></div><div class="fix-row"><span class="fix-ico">💧</span><span class="fix-nm">쿠쿠렌탈료</span><span class="fix-amt">11,900원</span></div><div class="fix-row"><span class="fix-ico">🗳️</span><span class="fix-nm">당비/회비</span><span class="fix-amt">2,000원</span></div>
+  <div class="fix-note">※ 자동차보험(101,681원)·의료보험(26,690원)은 Q4 3개월 평균값</div>
+</div>
+
+<div class="sec">💳 카드 지출 카테고리별 월평균</div>
+<div class="cat-grid"><div class="cat-card">
+  <div class="cat-top">
+    <span class="ico">📦</span>
+    <div class="cat-info">
+      <div class="cat-nm">온라인쇼핑</div>
+      <div class="cat-sub">256건/년 · 연 5,811,977원</div>
+    </div>
+    <div class="cat-avg">
+      <div class="avg-val">484,331원</div>
+      <div class="avg-lbl">월 평균</div>
     </div>
   </div>
-</div>
+  <div class="bar-bg"><div class="bar-fg" style="width:37.7%"></div></div>
+  <div class="bar-meta">월 지출의 12.6%</div>
+  <div class="chips"><span class="chip"><b>1월</b> 425,970원</span><span class="chip"><b>2월</b> 453,320원</span><span class="chip"><b>3월</b> 111,648원</span><span class="chip"><b>4월</b> 274,684원</span><span class="chip"><b>5월</b> 636,557원</span><span class="chip"><b>6월</b> 730,480원</span><span class="chip"><b>7월</b> 663,574원</span><span class="chip"><b>8월</b> 575,120원</span><span class="chip"><b>9월</b> 471,152원</span><span class="chip"><b>10월</b> 508,150원</span><span class="chip"><b>11월</b> 554,110원</span><span class="chip"><b>12월</b> 407,212원</span></div>
+  <details><summary>월별 상세 / 주요 가맹점</summary>
+    <div class="mer-list"><div class="mr"><span>쿠팡(쿠페이)</span><span>5,557,017원</span></div><div class="mr"><span>쿠팡</span><span>182,400원</span></div><div class="mr"><span>컬리_컬리페이-컬리</span><span>69,560원</span></div><div class="mr"><span>쿠팡플레이</span><span>2,900원</span></div><div class="mr"><span>컬리_멤버스</span><span>100원</span></div></div>
+  </details>
+</div><div class="cat-card">
+  <div class="cat-top">
+    <span class="ico">👕</span>
+    <div class="cat-info">
+      <div class="cat-nm">쇼핑/의류</div>
+      <div class="cat-sub">22건/년 · 연 2,105,931원</div>
+    </div>
+    <div class="cat-avg">
+      <div class="avg-val">175,494원</div>
+      <div class="avg-lbl">월 평균</div>
+    </div>
+  </div>
+  <div class="bar-bg"><div class="bar-fg" style="width:13.7%"></div></div>
+  <div class="bar-meta">월 지출의 4.6%</div>
+  <div class="chips"><span class="chip"><b>1월</b> 651,500원</span><span class="chip"><b>4월</b> 12,500원</span><span class="chip"><b>6월</b> 184,260원</span><span class="chip"><b>7월</b> 250,670원</span><span class="chip"><b>8월</b> 428,600원</span><span class="chip"><b>9월</b> 60,100원</span><span class="chip"><b>10월</b> 321,601원</span><span class="chip"><b>11월</b> 18,800원</span><span class="chip"><b>12월</b> 177,900원</span></div>
+  <details><summary>월별 상세 / 주요 가맹점</summary>
+    <div class="mer-list"><div class="mr"><span>유한회사 노마드컴퍼니</span><span>589,000원</span></div><div class="mr"><span>(주)한섬</span><span>251,801원</span></div><div class="mr"><span>타이어프로 신갈점</span><span>212,000원</span></div><div class="mr"><span>유한회사 나이키코리아</span><span>200,770원</span></div><div class="mr"><span>주식회사 노체어</span><span>176,900원</span></div></div>
+  </details>
+</div><div class="cat-card">
+  <div class="cat-top">
+    <span class="ico">🏥</span>
+    <div class="cat-info">
+      <div class="cat-nm">의료/약국</div>
+      <div class="cat-sub">24건/년 · 연 1,965,400원</div>
+    </div>
+    <div class="cat-avg">
+      <div class="avg-val">163,783원</div>
+      <div class="avg-lbl">월 평균</div>
+    </div>
+  </div>
+  <div class="bar-bg"><div class="bar-fg" style="width:12.7%"></div></div>
+  <div class="bar-meta">월 지출의 4.2%</div>
+  <div class="chips"><span class="chip"><b>1월</b> 77,800원</span><span class="chip"><b>2월</b> 18,600원</span><span class="chip"><b>3월</b> 17,800원</span><span class="chip"><b>4월</b> 17,800원</span><span class="chip"><b>5월</b> 193,700원</span><span class="chip"><b>6월</b> 110,000원</span><span class="chip"><b>7월</b> 22,000원</span><span class="chip"><b>8월</b> 110,000원</span><span class="chip"><b>9월</b> 108,000원</span><span class="chip"><b>10월</b> 180,800원</span><span class="chip"><b>11월</b> 1,102,900원</span><span class="chip"><b>12월</b> 6,000원</span></div>
+  <details><summary>월별 상세 / 주요 가맹점</summary>
+    <div class="mer-list"><div class="mr"><span>서울쿤스트치과의원</span><span>989,600원</span></div><div class="mr"><span>루이의원</span><span>385,000원</span></div><div class="mr"><span>광교탑치과의원</span><span>114,200원</span></div><div class="mr"><span>메이퓨어의원 광교점</span><span>109,500원</span></div><div class="mr"><span>리스펙성형외과의원</span><span>100,000원</span></div></div>
+  </details>
+</div><div class="cat-card">
+  <div class="cat-top">
+    <span class="ico">🏠</span>
+    <div class="cat-info">
+      <div class="cat-nm">주거관리비</div>
+      <div class="cat-sub">9건/년 · 연 1,948,120원</div>
+    </div>
+    <div class="cat-avg">
+      <div class="avg-val">162,343원</div>
+      <div class="avg-lbl">월 평균</div>
+    </div>
+  </div>
+  <div class="bar-bg"><div class="bar-fg" style="width:12.6%"></div></div>
+  <div class="bar-meta">월 지출의 4.2%</div>
+  <div class="chips"><span class="chip"><b>2월</b> 2,000원</span><span class="chip"><b>5월</b> 219,550원</span><span class="chip"><b>6월</b> 229,180원</span><span class="chip"><b>7월</b> 257,380원</span><span class="chip"><b>8월</b> 266,080원</span><span class="chip"><b>9월</b> 268,570원</span><span class="chip"><b>10월</b> 264,510원</span><span class="chip"><b>11월</b> 220,090원</span><span class="chip"><b>12월</b> 220,760원</span></div>
+  <details><summary>월별 상세 / 주요 가맹점</summary>
+    <div class="mer-list"><div class="mr"><span>08월 광교센트럴푸 0001동1734호</span><span>268,570원</span></div><div class="mr"><span>07월 광교센트럴푸 0001동1734호</span><span>266,080원</span></div><div class="mr"><span>09월 광교센트럴푸 0001동1734호</span><span>264,510원</span></div><div class="mr"><span>06월 광교센트럴푸 0001동1734호</span><span>257,380원</span></div><div class="mr"><span>05월 광교센트럴푸 0001동1734호</span><span>229,180원</span></div></div>
+  </details>
+</div><div class="cat-card">
+  <div class="cat-top">
+    <span class="ico">🖥️</span>
+    <div class="cat-info">
+      <div class="cat-nm">온라인/구독</div>
+      <div class="cat-sub">44건/년 · 연 1,888,820원</div>
+    </div>
+    <div class="cat-avg">
+      <div class="avg-val">157,402원</div>
+      <div class="avg-lbl">월 평균</div>
+    </div>
+  </div>
+  <div class="bar-bg"><div class="bar-fg" style="width:12.3%"></div></div>
+  <div class="bar-meta">월 지출의 4.1%</div>
+  <div class="chips"><span class="chip"><b>1월</b> 192,480원</span><span class="chip"><b>3월</b> 4,552원</span><span class="chip"><b>4월</b> 101,757원</span><span class="chip"><b>5월</b> 114,556원</span><span class="chip"><b>6월</b> 81,500원</span><span class="chip"><b>7월</b> 121,130원</span><span class="chip"><b>8월</b> 500,000원</span><span class="chip"><b>9월</b> 91,435원</span><span class="chip"><b>10월</b> 48,300원</span><span class="chip"><b>11월</b> 617,310원</span><span class="chip"><b>12월</b> 15,800원</span></div>
+  <details><summary>월별 상세 / 주요 가맹점</summary>
+    <div class="mer-list"><div class="mr"><span>네이버페이</span><span>1,656,423원</span></div><div class="mr"><span>팀스파르타 주식회사</span><span>98,000원</span></div><div class="mr"><span>(주)비바리퍼블리카</span><span>31,687원</span></div><div class="mr"><span>(주) 씨에이엔</span><span>24,000원</span></div><div class="mr"><span>에스케이플래닛(주)</span><span>17,000원</span></div></div>
+  </details>
+</div><div class="cat-card">
+  <div class="cat-top">
+    <span class="ico">🛵</span>
+    <div class="cat-info">
+      <div class="cat-nm">배달음식</div>
+      <div class="cat-sub">75건/년 · 연 1,473,087원</div>
+    </div>
+    <div class="cat-avg">
+      <div class="avg-val">122,757원</div>
+      <div class="avg-lbl">월 평균</div>
+    </div>
+  </div>
+  <div class="bar-bg"><div class="bar-fg" style="width:9.6%"></div></div>
+  <div class="bar-meta">월 지출의 3.2%</div>
+  <div class="chips"><span class="chip"><b>1월</b> 378,134원</span><span class="chip"><b>2월</b> 115,312원</span><span class="chip"><b>3월</b> 74,100원</span><span class="chip"><b>4월</b> 14,400원</span><span class="chip"><b>5월</b> 36,000원</span><span class="chip"><b>6월</b> 60,349원</span><span class="chip"><b>7월</b> 74,800원</span><span class="chip"><b>8월</b> 82,027원</span><span class="chip"><b>9월</b> 238,933원</span><span class="chip"><b>10월</b> 155,236원</span><span class="chip"><b>11월</b> 141,346원</span><span class="chip"><b>12월</b> 102,450원</span></div>
+  <details><summary>월별 상세 / 주요 가맹점</summary>
+    <div class="mer-list"><div class="mr"><span>쿠팡이츠</span><span>1,348,087원</span></div><div class="mr"><span>(주)우아한형제들</span><span>125,000원</span></div></div>
+  </details>
+</div><div class="cat-card">
+  <div class="cat-top">
+    <span class="ico">🍽️</span>
+    <div class="cat-info">
+      <div class="cat-nm">외식/식당</div>
+      <div class="cat-sub">49건/년 · 연 1,390,200원</div>
+    </div>
+    <div class="cat-avg">
+      <div class="avg-val">115,850원</div>
+      <div class="avg-lbl">월 평균</div>
+    </div>
+  </div>
+  <div class="bar-bg"><div class="bar-fg" style="width:9.0%"></div></div>
+  <div class="bar-meta">월 지출의 3.0%</div>
+  <div class="chips"><span class="chip"><b>1월</b> 180,800원</span><span class="chip"><b>2월</b> 148,900원</span><span class="chip"><b>3월</b> 70,000원</span><span class="chip"><b>6월</b> 26,000원</span><span class="chip"><b>7월</b> 331,900원</span><span class="chip"><b>8월</b> 151,800원</span><span class="chip"><b>9월</b> 50,000원</span><span class="chip"><b>10월</b> 218,200원</span><span class="chip"><b>11월</b> 91,300원</span><span class="chip"><b>12월</b> 121,300원</span></div>
+  <details><summary>월별 상세 / 주요 가맹점</summary>
+    <div class="mer-list"><div class="mr"><span>(주)아워홈 두산타워분당점</span><span>456,000원</span></div><div class="mr"><span>행운조개구이칼국수</span><span>78,000원</span></div><div class="mr"><span>주식회사 거궁광교점</span><span>74,000원</span></div><div class="mr"><span>심양 홍대점</span><span>62,000원</span></div><div class="mr"><span>샤브작</span><span>52,000원</span></div></div>
+  </details>
+</div><div class="cat-card">
+  <div class="cat-top">
+    <span class="ico">⛽</span>
+    <div class="cat-info">
+      <div class="cat-nm">주유비</div>
+      <div class="cat-sub">23건/년 · 연 1,209,000원</div>
+    </div>
+    <div class="cat-avg">
+      <div class="avg-val">100,750원</div>
+      <div class="avg-lbl">월 평균</div>
+    </div>
+  </div>
+  <div class="bar-bg"><div class="bar-fg" style="width:7.8%"></div></div>
+  <div class="bar-meta">월 지출의 2.6%</div>
+  <div class="chips"><span class="chip"><b>1월</b> 154,000원</span><span class="chip"><b>3월</b> 70,000원</span><span class="chip"><b>6월</b> 55,000원</span><span class="chip"><b>7월</b> 160,000원</span><span class="chip"><b>8월</b> 150,000원</span><span class="chip"><b>9월</b> 190,000원</span><span class="chip"><b>10월</b> 185,000원</span><span class="chip"><b>11월</b> 120,000원</span><span class="chip"><b>12월</b> 125,000원</span></div>
+  <details><summary>월별 상세 / 주요 가맹점</summary>
+    <div class="mer-list"><div class="mr"><span>광교서일주유소</span><span>629,000원</span></div><div class="mr"><span>주식회사 대호에너지</span><span>270,000원</span></div><div class="mr"><span>(주)한미석유동수원톨게이트</span><span>120,000원</span></div><div class="mr"><span>씨앤에스유통(주) 송내드림주유소</span><span>80,000원</span></div><div class="mr"><span>SK에너지(주)기쁨주유소</span><span>70,000원</span></div></div>
+  </details>
+</div><div class="cat-card">
+  <div class="cat-top">
+    <span class="ico">❓</span>
+    <div class="cat-info">
+      <div class="cat-nm">기타</div>
+      <div class="cat-sub">26건/년 · 연 956,650원</div>
+    </div>
+    <div class="cat-avg">
+      <div class="avg-val">79,721원</div>
+      <div class="avg-lbl">월 평균</div>
+    </div>
+  </div>
+  <div class="bar-bg"><div class="bar-fg" style="width:6.2%"></div></div>
+  <div class="bar-meta">월 지출의 2.1%</div>
+  <div class="chips"><span class="chip"><b>4월</b> 2,000원</span><span class="chip"><b>6월</b> 86,300원</span><span class="chip"><b>7월</b> 800원</span><span class="chip"><b>8월</b> 605,400원</span><span class="chip"><b>9월</b> 126,850원</span><span class="chip"><b>10월</b> 103,900원</span><span class="chip"><b>11월</b> 19,500원</span><span class="chip"><b>12월</b> 11,900원</span></div>
+  <details><summary>월별 상세 / 주요 가맹점</summary>
+    <div class="mer-list"><div class="mr"><span>(주)케이비손해보험</span><span>600,400원</span></div><div class="mr"><span>리 성형외과</span><span>88,000원</span></div><div class="mr"><span>주식회사 네모난오렌지</span><span>59,900원</span></div><div class="mr"><span>Apple</span><span>47,700원</span></div><div class="mr"><span>퀸즈베이커리(삼청점)</span><span>33,100원</span></div></div>
+  </details>
+</div><div class="cat-card">
+  <div class="cat-top">
+    <span class="ico">🅿️</span>
+    <div class="cat-info">
+      <div class="cat-nm">주차비</div>
+      <div class="cat-sub">22건/년 · 연 868,900원</div>
+    </div>
+    <div class="cat-avg">
+      <div class="avg-val">72,408원</div>
+      <div class="avg-lbl">월 평균</div>
+    </div>
+  </div>
+  <div class="bar-bg"><div class="bar-fg" style="width:5.6%"></div></div>
+  <div class="bar-meta">월 지출의 1.9%</div>
+  <div class="chips"><span class="chip"><b>5월</b> 1,200원</span><span class="chip"><b>6월</b> 1,400원</span><span class="chip"><b>7월</b> 4,900원</span><span class="chip"><b>8월</b> 5,150원</span><span class="chip"><b>9월</b> 620,550원</span><span class="chip"><b>10월</b> 9,500원</span><span class="chip"><b>11월</b> 1,600원</span><span class="chip"><b>12월</b> 224,600원</span></div>
+  <details><summary>월별 상세 / 주요 가맹점</summary>
+    <div class="mer-list"><div class="mr"><span>주식회사 스타필드수원</span><span>736,350원</span></div><div class="mr"><span>하이파킹</span><span>31,800원</span></div><div class="mr"><span>나이스인프라 주식회사</span><span>27,000원</span></div><div class="mr"><span>화동 유료주차장</span><span>26,000원</span></div><div class="mr"><span>서울특별시 주차장</span><span>16,800원</span></div></div>
+  </details>
+</div><div class="cat-card">
+  <div class="cat-top">
+    <span class="ico">📱</span>
+    <div class="cat-info">
+      <div class="cat-nm">통신비</div>
+      <div class="cat-sub">17건/년 · 연 810,400원</div>
+    </div>
+    <div class="cat-avg">
+      <div class="avg-val">67,533원</div>
+      <div class="avg-lbl">월 평균</div>
+    </div>
+  </div>
+  <div class="bar-bg"><div class="bar-fg" style="width:5.3%"></div></div>
+  <div class="bar-meta">월 지출의 1.8%</div>
+  <div class="chips"><span class="chip"><b>1월</b> 81,330원</span><span class="chip"><b>2월</b> 81,330원</span><span class="chip"><b>3월</b> 81,330원</span><span class="chip"><b>4월</b> 81,330원</span><span class="chip"><b>5월</b> 81,330원</span><span class="chip"><b>6월</b> 64,240원</span><span class="chip"><b>7월</b> 61,630원</span><span class="chip"><b>8월</b> 61,630원</span><span class="chip"><b>9월</b> 31,360원</span><span class="chip"><b>10월</b> 61,630원</span><span class="chip"><b>11월</b> 61,630원</span><span class="chip"><b>12월</b> 61,630원</span></div>
+  <details><summary>월별 상세 / 주요 가맹점</summary>
+    <div class="mer-list"><div class="mr"><span>에스케이텔레콤 (주)</span><span>69,500원</span></div><div class="mr"><span>#SKT 05월-**68-0783</span><span>67,430원</span></div><div class="mr"><span>#SKT 04월-**68-0783</span><span>67,430원</span></div><div class="mr"><span>#SKT 03월-**68-0783</span><span>67,430원</span></div><div class="mr"><span>#SKT 02월-**68-0783</span><span>67,430원</span></div></div>
+  </details>
+</div><div class="cat-card">
+  <div class="cat-top">
+    <span class="ico">🛒</span>
+    <div class="cat-info">
+      <div class="cat-nm">마트/슈퍼</div>
+      <div class="cat-sub">12건/년 · 연 549,810원</div>
+    </div>
+    <div class="cat-avg">
+      <div class="avg-val">45,818원</div>
+      <div class="avg-lbl">월 평균</div>
+    </div>
+  </div>
+  <div class="bar-bg"><div class="bar-fg" style="width:3.6%"></div></div>
+  <div class="bar-meta">월 지출의 1.2%</div>
+  <div class="chips"><span class="chip"><b>3월</b> 32,210원</span><span class="chip"><b>7월</b> 11,800원</span><span class="chip"><b>8월</b> 6,400원</span><span class="chip"><b>9월</b> 129,100원</span><span class="chip"><b>10월</b> 72,000원</span><span class="chip"><b>11월</b> 14,000원</span><span class="chip"><b>12월</b> 284,300원</span></div>
+  <details><summary>월별 상세 / 주요 가맹점</summary>
+    <div class="mer-list"><div class="mr"><span>롯데쇼핑(주) 롯데몰광교점</span><span>443,100원</span></div><div class="mr"><span>네이버페이-홈플러스㈜</span><span>36,800원</span></div><div class="mr"><span>지에스더프레시(GS THE FRESH) 부평…</span><span>32,210원</span></div><div class="mr"><span>(주)현대백화점</span><span>14,000원</span></div><div class="mr"><span>롯데쇼핑(주) 롯데마트 광교점</span><span>11,800원</span></div></div>
+  </details>
+</div><div class="cat-card">
+  <div class="cat-top">
+    <span class="ico">🐾</span>
+    <div class="cat-info">
+      <div class="cat-nm">반려동물</div>
+      <div class="cat-sub">9건/년 · 연 471,800원</div>
+    </div>
+    <div class="cat-avg">
+      <div class="avg-val">39,317원</div>
+      <div class="avg-lbl">월 평균</div>
+    </div>
+  </div>
+  <div class="bar-bg"><div class="bar-fg" style="width:3.1%"></div></div>
+  <div class="bar-meta">월 지출의 1.0%</div>
+  <div class="chips"><span class="chip"><b>1월</b> 40,000원</span><span class="chip"><b>2월</b> 65,000원</span><span class="chip"><b>6월</b> 45,000원</span><span class="chip"><b>7월</b> 12,000원</span><span class="chip"><b>8월</b> 234,800원</span><span class="chip"><b>9월</b> 75,000원</span></div>
+  <details><summary>월별 상세 / 주요 가맹점</summary>
+    <div class="mer-list"><div class="mr"><span>수원스카이동물메디컬센터</span><span>234,800원</span></div><div class="mr"><span>애니펫동물병원</span><span>185,000원</span></div><div class="mr"><span>다솜다솜 수제간식</span><span>24,000원</span></div><div class="mr"><span>위즐</span><span>16,000원</span></div><div class="mr"><span>댕글라이프</span><span>12,000원</span></div></div>
+  </details>
+</div><div class="cat-card">
+  <div class="cat-top">
+    <span class="ico">📋</span>
+    <div class="cat-info">
+      <div class="cat-nm">세금/공과금</div>
+      <div class="cat-sub">1건/년 · 연 458,520원</div>
+    </div>
+    <div class="cat-avg">
+      <div class="avg-val">38,210원</div>
+      <div class="avg-lbl">월 평균</div>
+    </div>
+  </div>
+  <div class="bar-bg"><div class="bar-fg" style="width:3.0%"></div></div>
+  <div class="bar-meta">월 지출의 1.0%</div>
+  <div class="chips"><span class="chip"><b>1월</b> 458,520원</span></div>
+  <details><summary>월별 상세 / 주요 가맹점</summary>
+    <div class="mer-list"><div class="mr"><span>지방세입금1건</span><span>458,520원</span></div></div>
+  </details>
+</div><div class="cat-card">
+  <div class="cat-top">
+    <span class="ico">🏃</span>
+    <div class="cat-info">
+      <div class="cat-nm">운동/헬스</div>
+      <div class="cat-sub">7건/년 · 연 399,750원</div>
+    </div>
+    <div class="cat-avg">
+      <div class="avg-val">33,312원</div>
+      <div class="avg-lbl">월 평균</div>
+    </div>
+  </div>
+  <div class="bar-bg"><div class="bar-fg" style="width:2.6%"></div></div>
+  <div class="bar-meta">월 지출의 0.9%</div>
+  <div class="chips"><span class="chip"><b>6월</b> 250원</span><span class="chip"><b>7월</b> 300,000원</span><span class="chip"><b>8월</b> 98,000원</span><span class="chip"><b>10월</b> 1,000원</span><span class="chip"><b>11월</b> 500원</span></div>
+  <details><summary>월별 상세 / 주요 가맹점</summary>
+    <div class="mer-list"><div class="mr"><span>주식회사 도미디피트니스 광교점</span><span>300,000원</span></div><div class="mr"><span>어스(US)</span><span>86,000원</span></div><div class="mr"><span>크세모스코리아 유한회사</span><span>12,000원</span></div><div class="mr"><span>주식회사 대성시스템</span><span>1,000원</span></div><div class="mr"><span>(주)대성시스템</span><span>500원</span></div></div>
+  </details>
+</div><div class="cat-card">
+  <div class="cat-top">
+    <span class="ico">🎬</span>
+    <div class="cat-info">
+      <div class="cat-nm">문화/여가</div>
+      <div class="cat-sub">33건/년 · 연 331,060원</div>
+    </div>
+    <div class="cat-avg">
+      <div class="avg-val">27,588원</div>
+      <div class="avg-lbl">월 평균</div>
+    </div>
+  </div>
+  <div class="bar-bg"><div class="bar-fg" style="width:2.1%"></div></div>
+  <div class="bar-meta">월 지출의 0.7%</div>
+  <div class="chips"><span class="chip"><b>1월</b> 16,500원</span><span class="chip"><b>5월</b> 24,350원</span><span class="chip"><b>7월</b> 45,600원</span><span class="chip"><b>8월</b> 66,179원</span><span class="chip"><b>9월</b> 31,531원</span><span class="chip"><b>10월</b> 63,300원</span><span class="chip"><b>11월</b> 30,700원</span><span class="chip"><b>12월</b> 52,900원</span></div>
+  <details><summary>월별 상세 / 주요 가맹점</summary>
+    <div class="mer-list"><div class="mr"><span>네이버페이-쏘카</span><span>103,631원</span></div><div class="mr"><span>CJCGV(씨제이씨지브이)</span><span>65,500원</span></div><div class="mr"><span>(주)쏘카</span><span>34,779원</span></div><div class="mr"><span>국립국악원</span><span>30,000원</span></div><div class="mr"><span>펍그린당구클럽</span><span>24,000원</span></div></div>
+  </details>
+</div><div class="cat-card">
+  <div class="cat-top">
+    <span class="ico">☕</span>
+    <div class="cat-info">
+      <div class="cat-nm">카페/음료</div>
+      <div class="cat-sub">47건/년 · 연 257,330원</div>
+    </div>
+    <div class="cat-avg">
+      <div class="avg-val">21,444원</div>
+      <div class="avg-lbl">월 평균</div>
+    </div>
+  </div>
+  <div class="bar-bg"><div class="bar-fg" style="width:1.7%"></div></div>
+  <div class="bar-meta">월 지출의 0.6%</div>
+  <div class="chips"><span class="chip"><b>1월</b> 22,600원</span><span class="chip"><b>2월</b> 7,300원</span><span class="chip"><b>7월</b> 22,000원</span><span class="chip"><b>8월</b> 44,200원</span><span class="chip"><b>9월</b> 49,500원</span><span class="chip"><b>10월</b> 34,000원</span><span class="chip"><b>11월</b> 65,900원</span><span class="chip"><b>12월</b> 11,830원</span></div>
+  <details><summary>월별 상세 / 주요 가맹점</summary>
+    <div class="mer-list"><div class="mr"><span>빽다방 분당정자엠코점</span><span>41,100원</span></div><div class="mr"><span>(재) 아름다운커피</span><span>26,000원</span></div><div class="mr"><span>르빵드파리앤브런치하우스 행궁점</span><span>25,200원</span></div><div class="mr"><span>프럼크릭(주)이디지이</span><span>22,600원</span></div><div class="mr"><span>투썸플레이스 양재매현역점</span><span>18,900원</span></div></div>
+  </details>
+</div><div class="cat-card">
+  <div class="cat-top">
+    <span class="ico">🚘</span>
+    <div class="cat-info">
+      <div class="cat-nm">통행료/교통</div>
+      <div class="cat-sub">180건/년 · 연 255,950원</div>
+    </div>
+    <div class="cat-avg">
+      <div class="avg-val">21,329원</div>
+      <div class="avg-lbl">월 평균</div>
+    </div>
+  </div>
+  <div class="bar-bg"><div class="bar-fg" style="width:1.7%"></div></div>
+  <div class="bar-meta">월 지출의 0.6%</div>
+  <div class="chips"><span class="chip"><b>1월</b> 62,500원</span><span class="chip"><b>2월</b> 18,500원</span><span class="chip"><b>3월</b> 11,900원</span><span class="chip"><b>4월</b> 1,000원</span><span class="chip"><b>5월</b> 8,300원</span><span class="chip"><b>6월</b> 2,000원</span><span class="chip"><b>7월</b> 64,550원</span><span class="chip"><b>8월</b> 5,200원</span><span class="chip"><b>9월</b> 16,400원</span><span class="chip"><b>10월</b> 18,200원</span><span class="chip"><b>11월</b> 13,900원</span><span class="chip"><b>12월</b> 33,500원</span></div>
+  <details><summary>월별 상세 / 주요 가맹점</summary>
+    <div class="mer-list"><div class="mr"><span>한국도로공사</span><span>94,350원</span></div><div class="mr"><span>용서고속도로</span><span>82,400원</span></div><div class="mr"><span>지하철 17 건</span><span>29,150원</span></div><div class="mr"><span>KIS정보통신</span><span>25,000원</span></div><div class="mr"><span>인천국제공항고속도로</span><span>7,600원</span></div></div>
+  </details>
+</div><div class="cat-card">
+  <div class="cat-top">
+    <span class="ico">🏪</span>
+    <div class="cat-info">
+      <div class="cat-nm">편의점</div>
+      <div class="cat-sub">42건/년 · 연 255,470원</div>
+    </div>
+    <div class="cat-avg">
+      <div class="avg-val">21,289원</div>
+      <div class="avg-lbl">월 평균</div>
+    </div>
+  </div>
+  <div class="bar-bg"><div class="bar-fg" style="width:1.7%"></div></div>
+  <div class="bar-meta">월 지출의 0.6%</div>
+  <div class="chips"><span class="chip"><b>1월</b> 40,870원</span><span class="chip"><b>2월</b> 9,600원</span><span class="chip"><b>3월</b> 15,000원</span><span class="chip"><b>5월</b> 7,500원</span><span class="chip"><b>7월</b> 13,800원</span><span class="chip"><b>8월</b> 44,100원</span><span class="chip"><b>9월</b> 73,500원</span><span class="chip"><b>10월</b> 28,000원</span><span class="chip"><b>11월</b> 14,200원</span><span class="chip"><b>12월</b> 8,900원</span></div>
+  <details><summary>월별 상세 / 주요 가맹점</summary>
+    <div class="mer-list"><div class="mr"><span>세븐일레븐분당두산타워점</span><span>92,000원</span></div><div class="mr"><span>세븐일레븐 여의도한강2호점</span><span>32,100원</span></div><div class="mr"><span>주식회사 씨유알에이</span><span>28,000원</span></div><div class="mr"><span>1119(일일일구)</span><span>22,500원</span></div><div class="mr"><span>GS25 광교센트럴</span><span>19,100원</span></div></div>
+  </details>
+</div><div class="cat-card">
+  <div class="cat-top">
+    <span class="ico">💇</span>
+    <div class="cat-info">
+      <div class="cat-nm">미용/뷰티</div>
+      <div class="cat-sub">3건/년 · 연 207,770원</div>
+    </div>
+    <div class="cat-avg">
+      <div class="avg-val">17,314원</div>
+      <div class="avg-lbl">월 평균</div>
+    </div>
+  </div>
+  <div class="bar-bg"><div class="bar-fg" style="width:1.3%"></div></div>
+  <div class="bar-meta">월 지출의 0.4%</div>
+  <div class="chips"><span class="chip"><b>1월</b> 30,000원</span><span class="chip"><b>4월</b> 58,000원</span><span class="chip"><b>10월</b> 119,770원</span></div>
+  <details><summary>월별 상세 / 주요 가맹점</summary>
+    <div class="mer-list"><div class="mr"><span>올리브영 광교아브뉴프랑점</span><span>119,770원</span></div><div class="mr"><span>준오헤어</span><span>88,000원</span></div></div>
+  </details>
+</div><div class="cat-card">
+  <div class="cat-top">
+    <span class="ico">💼</span>
+    <div class="cat-info">
+      <div class="cat-nm">업무/사무</div>
+      <div class="cat-sub">4건/년 · 연 36,900원</div>
+    </div>
+    <div class="cat-avg">
+      <div class="avg-val">3,075원</div>
+      <div class="avg-lbl">월 평균</div>
+    </div>
+  </div>
+  <div class="bar-bg"><div class="bar-fg" style="width:0.2%"></div></div>
+  <div class="bar-meta">월 지출의 0.1%</div>
+  <div class="chips"><span class="chip"><b>1월</b> 36,900원</span></div>
+  <details><summary>월별 상세 / 주요 가맹점</summary>
+    <div class="mer-list"><div class="mr"><span>법무법인 명인</span><span>26,750원</span></div><div class="mr"><span>진광열쇠도장</span><span>10,000원</span></div><div class="mr"><span>불여우오피스</span><span>150원</span></div></div>
+  </details>
+</div></div>
 
-<div class="sec">🗂️ 카테고리별 상세</div>
-<div class="cat-grid"><div class="cat-card">
-      <div class="cat-header"><span class="cat-icon">📦</span>
-        <div><div class="cat-name">온라인쇼핑</div><div class="cat-sub">256건 · 월평균 484,331원</div></div>
-        <div class="cat-amt">5,811,977원</div></div>
-      <div class="bar-bg"><div class="bar-fg" style="width:74.6%"></div></div>
-      <div class="cat-pct">18.6%</div>
-      <div class="monthly-chips"><span class="chip">1월 425K</span><span class="chip">2월 453K</span><span class="chip">3월 111K</span><span class="chip">4월 274K</span><span class="chip">5월 636K</span><span class="chip">6월 730K</span><span class="chip">7월 663K</span><span class="chip">8월 575K</span><span class="chip">9월 471K</span><span class="chip">10월 508K</span><span class="chip">11월 554K</span><span class="chip">12월 407K</span></div>
-      <details><summary>주요 가맹점</summary><div class="mr-list"><div class="mr"><span>쿠팡(쿠페이)</span><b>5,557,017원</b></div><div class="mr"><span>쿠팡</span><b>182,400원</b></div><div class="mr"><span>컬리_컬리페이-컬리</span><b>69,560원</b></div><div class="mr"><span>쿠팡플레이</span><b>2,900원</b></div><div class="mr"><span>컬리_멤버스</span><b>100원</b></div></div></details>
-    </div><div class="cat-card">
-      <div class="cat-header"><span class="cat-icon">🏠</span>
-        <div><div class="cat-name">월세</div><div class="cat-sub">4건 · 월평균 332,000원</div></div>
-        <div class="cat-amt">3,984,000원</div></div>
-      <div class="bar-bg"><div class="bar-fg" style="width:51.1%"></div></div>
-      <div class="cat-pct">12.8%</div>
-      <div class="monthly-chips"><span class="chip">9월 996K</span><span class="chip">10월 996K</span><span class="chip">11월 996K</span><span class="chip">12월 996K</span></div>
-      <details><summary>주요 가맹점</summary><div class="mr-list"><div class="mr"><span>이인호</span><b>3,984,000원</b></div></div></details>
-    </div><div class="cat-card">
-      <div class="cat-header"><span class="cat-icon">🏥</span>
-        <div><div class="cat-name">의료/약국</div><div class="cat-sub">26건 · 월평균 181,450원</div></div>
-        <div class="cat-amt">2,177,400원</div></div>
-      <div class="bar-bg"><div class="bar-fg" style="width:27.9%"></div></div>
-      <div class="cat-pct">7.0%</div>
-      <div class="monthly-chips"><span class="chip">1월 77K</span><span class="chip">2월 18K</span><span class="chip">3월 17K</span><span class="chip">4월 17K</span><span class="chip">5월 193K</span><span class="chip">6월 176K</span><span class="chip">7월 22K</span><span class="chip">8월 110K</span><span class="chip">9월 108K</span><span class="chip">10월 180K</span><span class="chip">11월 1102K</span><span class="chip">12월 152K</span></div>
-      <details><summary>주요 가맹점</summary><div class="mr-list"><div class="mr"><span>서울쿤스트치과의원</span><b>989,600원</b></div><div class="mr"><span>루이의원</span><b>385,000원</b></div><div class="mr"><span>타이어프로 신갈점</span><b>212,000원</b></div><div class="mr"><span>광교탑치과의원</span><b>114,200원</b></div><div class="mr"><span>메이퓨어의원 광교점</span><b>109,500원</b></div></div></details>
-    </div><div class="cat-card">
-      <div class="cat-header"><span class="cat-icon">🚗</span>
-        <div><div class="cat-name">자동차 할부</div><div class="cat-sub">3건 · 월평균 174,455원</div></div>
-        <div class="cat-amt">2,093,463원</div></div>
-      <div class="bar-bg"><div class="bar-fg" style="width:26.9%"></div></div>
-      <div class="cat-pct">6.7%</div>
-      <div class="monthly-chips"><span class="chip">10월 697K</span><span class="chip">11월 697K</span><span class="chip">12월 697K</span></div>
-      <details><summary>주요 가맹점</summary><div class="mr-list"><div class="mr"><span>BMW</span><b>2,093,463원</b></div></div></details>
-    </div><div class="cat-card">
-      <div class="cat-header"><span class="cat-icon">🏠</span>
-        <div><div class="cat-name">주거/관리비</div><div class="cat-sub">9건 · 월평균 162,343원</div></div>
-        <div class="cat-amt">1,948,120원</div></div>
-      <div class="bar-bg"><div class="bar-fg" style="width:25.0%"></div></div>
-      <div class="cat-pct">6.2%</div>
-      <div class="monthly-chips"><span class="chip">2월 2K</span><span class="chip">5월 219K</span><span class="chip">6월 229K</span><span class="chip">7월 257K</span><span class="chip">8월 266K</span><span class="chip">9월 268K</span><span class="chip">10월 264K</span><span class="chip">11월 220K</span><span class="chip">12월 220K</span></div>
-      <details><summary>주요 가맹점</summary><div class="mr-list"><div class="mr"><span>08월 광교센트럴푸 0001동1734호</span><b>268,570원</b></div><div class="mr"><span>07월 광교센트럴푸 0001동1734호</span><b>266,080원</b></div><div class="mr"><span>09월 광교센트럴푸 0001동1734호</span><b>264,510원</b></div><div class="mr"><span>06월 광교센트럴푸 0001동1734호</span><b>257,380원</b></div><div class="mr"><span>05월 광교센트럴푸 0001동1734호</span><b>229,180원</b></div></div></details>
-    </div><div class="cat-card">
-      <div class="cat-header"><span class="cat-icon">👕</span>
-        <div><div class="cat-name">쇼핑/의류</div><div class="cat-sub">20건 · 월평균 157,827원</div></div>
-        <div class="cat-amt">1,893,931원</div></div>
-      <div class="bar-bg"><div class="bar-fg" style="width:24.3%"></div></div>
-      <div class="cat-pct">6.1%</div>
-      <div class="monthly-chips"><span class="chip">1월 651K</span><span class="chip">4월 12K</span><span class="chip">6월 118K</span><span class="chip">7월 250K</span><span class="chip">8월 428K</span><span class="chip">9월 60K</span><span class="chip">10월 321K</span><span class="chip">11월 18K</span><span class="chip">12월 31K</span></div>
-      <details><summary>주요 가맹점</summary><div class="mr-list"><div class="mr"><span>유한회사 노마드컴퍼니</span><b>589,000원</b></div><div class="mr"><span>(주)한섬</span><b>251,801원</b></div><div class="mr"><span>유한회사 나이키코리아</span><b>200,770원</b></div><div class="mr"><span>주식회사 노체어</span><b>176,900원</b></div><div class="mr"><span>유니클로 온라인 스토어</span><b>134,700원</b></div></div></details>
-    </div><div class="cat-card">
-      <div class="cat-header"><span class="cat-icon">🖥️</span>
-        <div><div class="cat-name">온라인/구독</div><div class="cat-sub">44건 · 월평균 157,401원</div></div>
-        <div class="cat-amt">1,888,820원</div></div>
-      <div class="bar-bg"><div class="bar-fg" style="width:24.2%"></div></div>
-      <div class="cat-pct">6.1%</div>
-      <div class="monthly-chips"><span class="chip">1월 192K</span><span class="chip">3월 4K</span><span class="chip">4월 101K</span><span class="chip">5월 114K</span><span class="chip">6월 81K</span><span class="chip">7월 121K</span><span class="chip">8월 500K</span><span class="chip">9월 91K</span><span class="chip">10월 48K</span><span class="chip">11월 617K</span><span class="chip">12월 15K</span></div>
-      <details><summary>주요 가맹점</summary><div class="mr-list"><div class="mr"><span>네이버페이</span><b>1,656,423원</b></div><div class="mr"><span>팀스파르타 주식회사</span><b>98,000원</b></div><div class="mr"><span>(주)비바리퍼블리카</span><b>31,687원</b></div><div class="mr"><span>(주) 씨에이엔</span><b>24,000원</b></div><div class="mr"><span>에스케이플래닛(주)</span><b>17,000원</b></div></div></details>
-    </div><div class="cat-card">
-      <div class="cat-header"><span class="cat-icon">🛵</span>
-        <div><div class="cat-name">배달음식</div><div class="cat-sub">75건 · 월평균 122,757원</div></div>
-        <div class="cat-amt">1,473,087원</div></div>
-      <div class="bar-bg"><div class="bar-fg" style="width:18.9%"></div></div>
-      <div class="cat-pct">4.7%</div>
-      <div class="monthly-chips"><span class="chip">1월 378K</span><span class="chip">2월 115K</span><span class="chip">3월 74K</span><span class="chip">4월 14K</span><span class="chip">5월 36K</span><span class="chip">6월 60K</span><span class="chip">7월 74K</span><span class="chip">8월 82K</span><span class="chip">9월 238K</span><span class="chip">10월 155K</span><span class="chip">11월 141K</span><span class="chip">12월 102K</span></div>
-      <details><summary>주요 가맹점</summary><div class="mr-list"><div class="mr"><span>쿠팡이츠</span><b>1,348,087원</b></div><div class="mr"><span>(주)우아한형제들</span><b>125,000원</b></div></div></details>
-    </div><div class="cat-card">
-      <div class="cat-header"><span class="cat-icon">🍽️</span>
-        <div><div class="cat-name">외식/식당</div><div class="cat-sub">49건 · 월평균 115,850원</div></div>
-        <div class="cat-amt">1,390,200원</div></div>
-      <div class="bar-bg"><div class="bar-fg" style="width:17.8%"></div></div>
-      <div class="cat-pct">4.5%</div>
-      <div class="monthly-chips"><span class="chip">1월 180K</span><span class="chip">2월 148K</span><span class="chip">3월 70K</span><span class="chip">6월 26K</span><span class="chip">7월 331K</span><span class="chip">8월 151K</span><span class="chip">9월 50K</span><span class="chip">10월 218K</span><span class="chip">11월 91K</span><span class="chip">12월 121K</span></div>
-      <details><summary>주요 가맹점</summary><div class="mr-list"><div class="mr"><span>(주)아워홈 두산타워분당점</span><b>456,000원</b></div><div class="mr"><span>행운조개구이칼국수</span><b>78,000원</b></div><div class="mr"><span>주식회사 거궁광교점</span><b>74,000원</b></div><div class="mr"><span>심양 홍대점</span><b>62,000원</b></div><div class="mr"><span>샤브작</span><b>52,000원</b></div></div></details>
-    </div><div class="cat-card">
-      <div class="cat-header"><span class="cat-icon">⛽</span>
-        <div><div class="cat-name">주유비</div><div class="cat-sub">23건 · 월평균 100,750원</div></div>
-        <div class="cat-amt">1,209,000원</div></div>
-      <div class="bar-bg"><div class="bar-fg" style="width:15.5%"></div></div>
-      <div class="cat-pct">3.9%</div>
-      <div class="monthly-chips"><span class="chip">1월 154K</span><span class="chip">3월 70K</span><span class="chip">6월 55K</span><span class="chip">7월 160K</span><span class="chip">8월 150K</span><span class="chip">9월 190K</span><span class="chip">10월 185K</span><span class="chip">11월 120K</span><span class="chip">12월 125K</span></div>
-      <details><summary>주요 가맹점</summary><div class="mr-list"><div class="mr"><span>광교서일주유소</span><b>629,000원</b></div><div class="mr"><span>주식회사 대호에너지</span><b>270,000원</b></div><div class="mr"><span>(주)한미석유동수원톨게이트</span><b>120,000원</b></div><div class="mr"><span>씨앤에스유통(주) 송내드림주유소</span><b>80,000원</b></div><div class="mr"><span>SK에너지(주)기쁨주유소</span><b>70,000원</b></div></div></details>
-    </div><div class="cat-card">
-      <div class="cat-header"><span class="cat-icon">❓</span>
-        <div><div class="cat-name">기타</div><div class="cat-sub">26건 · 월평균 79,720원</div></div>
-        <div class="cat-amt">956,650원</div></div>
-      <div class="bar-bg"><div class="bar-fg" style="width:12.3%"></div></div>
-      <div class="cat-pct">3.1%</div>
-      <div class="monthly-chips"><span class="chip">4월 2K</span><span class="chip">6월 86K</span><span class="chip">7월 0K</span><span class="chip">8월 605K</span><span class="chip">9월 126K</span><span class="chip">10월 103K</span><span class="chip">11월 19K</span><span class="chip">12월 11K</span></div>
-      <details><summary>주요 가맹점</summary><div class="mr-list"><div class="mr"><span>(주)케이비손해보험</span><b>600,400원</b></div><div class="mr"><span>리 성형외과</span><b>88,000원</b></div><div class="mr"><span>주식회사 네모난오렌지</span><b>59,900원</b></div><div class="mr"><span>Apple</span><b>47,700원</b></div><div class="mr"><span>퀸즈베이커리(삼청점)</span><b>33,100원</b></div></div></details>
-    </div><div class="cat-card">
-      <div class="cat-header"><span class="cat-icon">🅿️</span>
-        <div><div class="cat-name">주차비</div><div class="cat-sub">22건 · 월평균 72,408원</div></div>
-        <div class="cat-amt">868,900원</div></div>
-      <div class="bar-bg"><div class="bar-fg" style="width:11.1%"></div></div>
-      <div class="cat-pct">2.8%</div>
-      <div class="monthly-chips"><span class="chip">5월 1K</span><span class="chip">6월 1K</span><span class="chip">7월 4K</span><span class="chip">8월 5K</span><span class="chip">9월 620K</span><span class="chip">10월 9K</span><span class="chip">11월 1K</span><span class="chip">12월 224K</span></div>
-      <details><summary>주요 가맹점</summary><div class="mr-list"><div class="mr"><span>주식회사 스타필드수원</span><b>736,350원</b></div><div class="mr"><span>하이파킹</span><b>31,800원</b></div><div class="mr"><span>나이스인프라 주식회사</span><b>27,000원</b></div><div class="mr"><span>화동 유료주차장</span><b>26,000원</b></div><div class="mr"><span>서울특별시 주차장</span><b>16,800원</b></div></div></details>
-    </div><div class="cat-card">
-      <div class="cat-header"><span class="cat-icon">📱</span>
-        <div><div class="cat-name">통신비</div><div class="cat-sub">17건 · 월평균 67,533원</div></div>
-        <div class="cat-amt">810,400원</div></div>
-      <div class="bar-bg"><div class="bar-fg" style="width:10.4%"></div></div>
-      <div class="cat-pct">2.6%</div>
-      <div class="monthly-chips"><span class="chip">1월 81K</span><span class="chip">2월 81K</span><span class="chip">3월 81K</span><span class="chip">4월 81K</span><span class="chip">5월 81K</span><span class="chip">6월 64K</span><span class="chip">7월 61K</span><span class="chip">8월 61K</span><span class="chip">9월 31K</span><span class="chip">10월 61K</span><span class="chip">11월 61K</span><span class="chip">12월 61K</span></div>
-      <details><summary>주요 가맹점</summary><div class="mr-list"><div class="mr"><span>에스케이텔레콤 (주)</span><b>69,500원</b></div><div class="mr"><span>#SKT 05월-**68-0783</span><b>67,430원</b></div><div class="mr"><span>#SKT 04월-**68-0783</span><b>67,430원</b></div><div class="mr"><span>#SKT 03월-**68-0783</span><b>67,430원</b></div><div class="mr"><span>#SKT 02월-**68-0783</span><b>67,430원</b></div></div></details>
-    </div><div class="cat-card">
-      <div class="cat-header"><span class="cat-icon">🛡️</span>
-        <div><div class="cat-name">자동차보험</div><div class="cat-sub">12건 · 월평균 55,862원</div></div>
-        <div class="cat-amt">670,353원</div></div>
-      <div class="bar-bg"><div class="bar-fg" style="width:8.6%"></div></div>
-      <div class="cat-pct">2.2%</div>
-      <div class="monthly-chips"><span class="chip">10월 218K</span><span class="chip">11월 219K</span><span class="chip">12월 232K</span></div>
-      <details><summary>주요 가맹점</summary><div class="mr-list"><div class="mr"><span>ＫＢ손14512</span><b>110,672원</b></div><div class="mr"><span>ＫＢ손14411</span><b>97,185원</b></div><div class="mr"><span>ＫＢ손14310</span><b>97,185원</b></div><div class="mr"><span>KB손보약대</span><b>80,071원</b></div><div class="mr"><span>ＫＢ손18012</span><b>74,800원</b></div></div></details>
-    </div><div class="cat-card">
-      <div class="cat-header"><span class="cat-icon">🛒</span>
-        <div><div class="cat-name">마트/슈퍼</div><div class="cat-sub">12건 · 월평균 45,817원</div></div>
-        <div class="cat-amt">549,810원</div></div>
-      <div class="bar-bg"><div class="bar-fg" style="width:7.1%"></div></div>
-      <div class="cat-pct">1.8%</div>
-      <div class="monthly-chips"><span class="chip">3월 32K</span><span class="chip">7월 11K</span><span class="chip">8월 6K</span><span class="chip">9월 129K</span><span class="chip">10월 72K</span><span class="chip">11월 14K</span><span class="chip">12월 284K</span></div>
-      <details><summary>주요 가맹점</summary><div class="mr-list"><div class="mr"><span>롯데쇼핑(주) 롯데몰광교점</span><b>443,100원</b></div><div class="mr"><span>네이버페이-홈플러스㈜</span><b>36,800원</b></div><div class="mr"><span>지에스더프레시(GS THE FRESH) …</span><b>32,210원</b></div><div class="mr"><span>(주)현대백화점</span><b>14,000원</b></div><div class="mr"><span>롯데쇼핑(주) 롯데마트 광교점</span><b>11,800원</b></div></div></details>
-    </div><div class="cat-card">
-      <div class="cat-header"><span class="cat-icon">📱</span>
-        <div><div class="cat-name">간편결제</div><div class="cat-sub">19건 · 월평균 42,527원</div></div>
-        <div class="cat-amt">510,330원</div></div>
-      <div class="bar-bg"><div class="bar-fg" style="width:6.5%"></div></div>
-      <div class="cat-pct">1.6%</div>
-      <div class="monthly-chips"><span class="chip">9월 48K</span><span class="chip">10월 176K</span><span class="chip">11월 205K</span><span class="chip">12월 79K</span></div>
-      <details><summary>주요 가맹점</summary><div class="mr-list"><div class="mr"><span>카카오페이</span><b>345,830원</b></div><div class="mr"><span>당근페이</span><b>164,500원</b></div></div></details>
-    </div><div class="cat-card">
-      <div class="cat-header"><span class="cat-icon">🐾</span>
-        <div><div class="cat-name">반려동물</div><div class="cat-sub">9건 · 월평균 39,316원</div></div>
-        <div class="cat-amt">471,800원</div></div>
-      <div class="bar-bg"><div class="bar-fg" style="width:6.1%"></div></div>
-      <div class="cat-pct">1.5%</div>
-      <div class="monthly-chips"><span class="chip">1월 40K</span><span class="chip">2월 65K</span><span class="chip">6월 45K</span><span class="chip">7월 12K</span><span class="chip">8월 234K</span><span class="chip">9월 75K</span></div>
-      <details><summary>주요 가맹점</summary><div class="mr-list"><div class="mr"><span>수원스카이동물메디컬센터</span><b>234,800원</b></div><div class="mr"><span>애니펫동물병원</span><b>185,000원</b></div><div class="mr"><span>다솜다솜 수제간식</span><b>24,000원</b></div><div class="mr"><span>위즐</span><b>16,000원</b></div><div class="mr"><span>댕글라이프</span><b>12,000원</b></div></div></details>
-    </div><div class="cat-card">
-      <div class="cat-header"><span class="cat-icon">📋</span>
-        <div><div class="cat-name">세금/공과금</div><div class="cat-sub">1건 · 월평균 38,210원</div></div>
-        <div class="cat-amt">458,520원</div></div>
-      <div class="bar-bg"><div class="bar-fg" style="width:5.9%"></div></div>
-      <div class="cat-pct">1.5%</div>
-      <div class="monthly-chips"><span class="chip">1월 458K</span></div>
-      <details><summary>주요 가맹점</summary><div class="mr-list"><div class="mr"><span>지방세입금1건</span><b>458,520원</b></div></div></details>
-    </div><div class="cat-card">
-      <div class="cat-header"><span class="cat-icon">🏃</span>
-        <div><div class="cat-name">운동/스포츠</div><div class="cat-sub">7건 · 월평균 33,312원</div></div>
-        <div class="cat-amt">399,750원</div></div>
-      <div class="bar-bg"><div class="bar-fg" style="width:5.1%"></div></div>
-      <div class="cat-pct">1.3%</div>
-      <div class="monthly-chips"><span class="chip">6월 0K</span><span class="chip">7월 300K</span><span class="chip">8월 98K</span><span class="chip">10월 1K</span><span class="chip">11월 0K</span></div>
-      <details><summary>주요 가맹점</summary><div class="mr-list"><div class="mr"><span>주식회사 도미디피트니스 광교점</span><b>300,000원</b></div><div class="mr"><span>어스(US)</span><b>86,000원</b></div><div class="mr"><span>크세모스코리아 유한회사</span><b>12,000원</b></div><div class="mr"><span>주식회사 대성시스템</span><b>1,000원</b></div><div class="mr"><span>(주)대성시스템</span><b>500원</b></div></div></details>
-    </div><div class="cat-card">
-      <div class="cat-header"><span class="cat-icon">🎬</span>
-        <div><div class="cat-name">문화/여가</div><div class="cat-sub">33건 · 월평균 27,588원</div></div>
-        <div class="cat-amt">331,060원</div></div>
-      <div class="bar-bg"><div class="bar-fg" style="width:4.2%"></div></div>
-      <div class="cat-pct">1.1%</div>
-      <div class="monthly-chips"><span class="chip">1월 16K</span><span class="chip">5월 24K</span><span class="chip">7월 45K</span><span class="chip">8월 66K</span><span class="chip">9월 31K</span><span class="chip">10월 63K</span><span class="chip">11월 30K</span><span class="chip">12월 52K</span></div>
-      <details><summary>주요 가맹점</summary><div class="mr-list"><div class="mr"><span>네이버페이-쏘카</span><b>103,631원</b></div><div class="mr"><span>CJCGV(씨제이씨지브이)</span><b>65,500원</b></div><div class="mr"><span>(주)쏘카</span><b>34,779원</b></div><div class="mr"><span>국립국악원</span><b>30,000원</b></div><div class="mr"><span>펍그린당구클럽</span><b>24,000원</b></div></div></details>
-    </div><div class="cat-card">
-      <div class="cat-header"><span class="cat-icon">☕</span>
-        <div><div class="cat-name">카페/음료</div><div class="cat-sub">47건 · 월평균 21,444원</div></div>
-        <div class="cat-amt">257,330원</div></div>
-      <div class="bar-bg"><div class="bar-fg" style="width:3.3%"></div></div>
-      <div class="cat-pct">0.8%</div>
-      <div class="monthly-chips"><span class="chip">1월 22K</span><span class="chip">2월 7K</span><span class="chip">7월 22K</span><span class="chip">8월 44K</span><span class="chip">9월 49K</span><span class="chip">10월 34K</span><span class="chip">11월 65K</span><span class="chip">12월 11K</span></div>
-      <details><summary>주요 가맹점</summary><div class="mr-list"><div class="mr"><span>빽다방 분당정자엠코점</span><b>41,100원</b></div><div class="mr"><span>(재) 아름다운커피</span><b>26,000원</b></div><div class="mr"><span>르빵드파리앤브런치하우스 행궁점</span><b>25,200원</b></div><div class="mr"><span>프럼크릭(주)이디지이</span><b>22,600원</b></div><div class="mr"><span>투썸플레이스 양재매현역점</span><b>18,900원</b></div></div></details>
-    </div><div class="cat-card">
-      <div class="cat-header"><span class="cat-icon">🚗</span>
-        <div><div class="cat-name">통행료/교통</div><div class="cat-sub">180건 · 월평균 21,329원</div></div>
-        <div class="cat-amt">255,950원</div></div>
-      <div class="bar-bg"><div class="bar-fg" style="width:3.3%"></div></div>
-      <div class="cat-pct">0.8%</div>
-      <div class="monthly-chips"><span class="chip">1월 62K</span><span class="chip">2월 18K</span><span class="chip">3월 11K</span><span class="chip">4월 1K</span><span class="chip">5월 8K</span><span class="chip">6월 2K</span><span class="chip">7월 64K</span><span class="chip">8월 5K</span><span class="chip">9월 16K</span><span class="chip">10월 18K</span><span class="chip">11월 13K</span><span class="chip">12월 33K</span></div>
-      <details><summary>주요 가맹점</summary><div class="mr-list"><div class="mr"><span>한국도로공사</span><b>94,350원</b></div><div class="mr"><span>용서고속도로</span><b>82,400원</b></div><div class="mr"><span>지하철 17 건</span><b>29,150원</b></div><div class="mr"><span>KIS정보통신</span><b>25,000원</b></div><div class="mr"><span>인천국제공항고속도로</span><b>7,600원</b></div></div></details>
-    </div><div class="cat-card">
-      <div class="cat-header"><span class="cat-icon">🏪</span>
-        <div><div class="cat-name">편의점</div><div class="cat-sub">42건 · 월평균 21,289원</div></div>
-        <div class="cat-amt">255,470원</div></div>
-      <div class="bar-bg"><div class="bar-fg" style="width:3.3%"></div></div>
-      <div class="cat-pct">0.8%</div>
-      <div class="monthly-chips"><span class="chip">1월 40K</span><span class="chip">2월 9K</span><span class="chip">3월 15K</span><span class="chip">5월 7K</span><span class="chip">7월 13K</span><span class="chip">8월 44K</span><span class="chip">9월 73K</span><span class="chip">10월 28K</span><span class="chip">11월 14K</span><span class="chip">12월 8K</span></div>
-      <details><summary>주요 가맹점</summary><div class="mr-list"><div class="mr"><span>세븐일레븐분당두산타워점</span><b>92,000원</b></div><div class="mr"><span>세븐일레븐 여의도한강2호점</span><b>32,100원</b></div><div class="mr"><span>주식회사 씨유알에이</span><b>28,000원</b></div><div class="mr"><span>1119(일일일구)</span><b>22,500원</b></div><div class="mr"><span>GS25 광교센트럴</span><b>19,100원</b></div></div></details>
-    </div><div class="cat-card">
-      <div class="cat-header"><span class="cat-icon">💇</span>
-        <div><div class="cat-name">미용/뷰티</div><div class="cat-sub">3건 · 월평균 17,314원</div></div>
-        <div class="cat-amt">207,770원</div></div>
-      <div class="bar-bg"><div class="bar-fg" style="width:2.7%"></div></div>
-      <div class="cat-pct">0.7%</div>
-      <div class="monthly-chips"><span class="chip">1월 30K</span><span class="chip">4월 58K</span><span class="chip">10월 119K</span></div>
-      <details><summary>주요 가맹점</summary><div class="mr-list"><div class="mr"><span>올리브영 광교아브뉴프랑점</span><b>119,770원</b></div><div class="mr"><span>준오헤어</span><b>88,000원</b></div></div></details>
-    </div><div class="cat-card">
-      <div class="cat-header"><span class="cat-icon">❤️</span>
-        <div><div class="cat-name">기부/후원</div><div class="cat-sub">10건 · 월평균 8,416원</div></div>
-        <div class="cat-amt">101,000원</div></div>
-      <div class="bar-bg"><div class="bar-fg" style="width:1.3%"></div></div>
-      <div class="cat-pct">0.3%</div>
-      <div class="monthly-chips"><span class="chip">9월 20K</span><span class="chip">10월 27K</span><span class="chip">11월 27K</span><span class="chip">12월 27K</span></div>
-      <details><summary>주요 가맹점</summary><div class="mr-list"><div class="mr"><span>동물권케어</span><b>80,000원</b></div><div class="mr"><span>재)한국세계자</span><b>15,000원</b></div><div class="mr"><span>함께하는사랑밭</span><b>6,000원</b></div></div></details>
-    </div><div class="cat-card">
-      <div class="cat-header"><span class="cat-icon">👤</span>
-        <div><div class="cat-name">개인 송금/이체</div><div class="cat-sub">6건 · 월평균 7,866원</div></div>
-        <div class="cat-amt">94,400원</div></div>
-      <div class="bar-bg"><div class="bar-fg" style="width:1.2%"></div></div>
-      <div class="cat-pct">0.3%</div>
-      <div class="monthly-chips"><span class="chip">10월 31K</span><span class="chip">11월 37K</span><span class="chip">12월 26K</span></div>
-      <details><summary>주요 가맹점</summary><div class="mr-list"><div class="mr"><span>임지현</span><b>37,400원</b></div><div class="mr"><span>김명숙</span><b>21,000원</b></div><div class="mr"><span>장태규</span><b>16,000원</b></div><div class="mr"><span>이규홍</span><b>15,000원</b></div><div class="mr"><span>이기석</span><b>5,000원</b></div></div></details>
-    </div><div class="cat-card">
-      <div class="cat-header"><span class="cat-icon">💧</span>
-        <div><div class="cat-name">렌탈료</div><div class="cat-sub">4건 · 월평균 3,966원</div></div>
-        <div class="cat-amt">47,600원</div></div>
-      <div class="bar-bg"><div class="bar-fg" style="width:0.6%"></div></div>
-      <div class="cat-pct">0.2%</div>
-      <div class="monthly-chips"><span class="chip">9월 11K</span><span class="chip">10월 11K</span><span class="chip">11월 11K</span><span class="chip">12월 11K</span></div>
-      <details><summary>주요 가맹점</summary><div class="mr-list"><div class="mr"><span>쿠쿠렌탈료</span><b>47,600원</b></div></div></details>
-    </div><div class="cat-card">
-      <div class="cat-header"><span class="cat-icon">💼</span>
-        <div><div class="cat-name">사무/전문서비스</div><div class="cat-sub">4건 · 월평균 3,075원</div></div>
-        <div class="cat-amt">36,900원</div></div>
-      <div class="bar-bg"><div class="bar-fg" style="width:0.5%"></div></div>
-      <div class="cat-pct">0.1%</div>
-      <div class="monthly-chips"><span class="chip">1월 36K</span></div>
-      <details><summary>주요 가맹점</summary><div class="mr-list"><div class="mr"><span>법무법인 명인</span><b>26,750원</b></div><div class="mr"><span>진광열쇠도장</span><b>10,000원</b></div><div class="mr"><span>불여우오피스</span><b>150원</b></div></div></details>
-    </div><div class="cat-card">
-      <div class="cat-header"><span class="cat-icon">💸</span>
-        <div><div class="cat-name">대출이자</div><div class="cat-sub">2건 · 월평균 1,186원</div></div>
-        <div class="cat-amt">14,240원</div></div>
-      <div class="bar-bg"><div class="bar-fg" style="width:0.2%"></div></div>
-      <div class="cat-pct">0.0%</div>
-      <div class="monthly-chips"><span class="chip">10월 10K</span><span class="chip">11월 3K</span></div>
-      <details><summary>주요 가맹점</summary><div class="mr-list"><div class="mr"><span>한도대출이자</span><b>14,240원</b></div></div></details>
-    </div><div class="cat-card">
-      <div class="cat-header"><span class="cat-icon">🗳️</span>
-        <div><div class="cat-name">당비/회비</div><div class="cat-sub">3건 · 월평균 500원</div></div>
-        <div class="cat-amt">6,000원</div></div>
-      <div class="bar-bg"><div class="bar-fg" style="width:0.1%"></div></div>
-      <div class="cat-pct">0.0%</div>
-      <div class="monthly-chips"><span class="chip">10월 2K</span><span class="chip">11월 2K</span><span class="chip">12월 2K</span></div>
-      <details><summary>주요 가맹점</summary><div class="mr-list"><div class="mr"><span>당비12월</span><b>2,000원</b></div><div class="mr"><span>당비11월</span><b>2,000원</b></div><div class="mr"><span>당비10월</span><b>2,000원</b></div></div></details>
-    </div></div>
+</div>
+<footer>2025년 지출 분석 · 신한카드(491건) + 국민카드(370건) + 현대카드(44건) + 신한은행 고정 지출</footer>
 
-<div class="sec">💡 지출 인사이트</div>
-<div class="ins-grid">
-  <div class="ins"><div class="ins-ico">📦</div><div class="ins-lbl">가장 많이 쓴 항목</div>
-    <div class="ins-val" style="color:#f59e0b">5,811,977원</div>
-    <div class="ins-desc">온라인쇼핑(쿠팡·컬리) 256건. 월평균 484,331원. 정기배송 전환 시 절감 가능.</div></div>
-  <div class="ins"><div class="ins-ico">🏠</div><div class="ins-lbl">주거 고정비 (Q4 기준)</div>
-    <div class="ins-val">1,645,373원/월</div>
-    <div class="ins-desc">월세 996,000 + 관리비 등. 연 11,776,480원 예상.</div></div>
-  <div class="ins"><div class="ins-ico">🚗</div><div class="ins-lbl">자동차 총 비용 (Q4)</div>
-    <div class="ins-val" style="color:#f59e0b">1,699,222원/월</div>
-    <div class="ins-desc">BMW 할부 697,821 + 보험 + 주유 + 통행료 + 주차. 전체 지출의 상당 비중.</div></div>
-  <div class="ins"><div class="ins-ico">🛵</div><div class="ins-lbl">식비 합산</div>
-    <div class="ins-val">281,340원/월</div>
-    <div class="ins-desc">배달+외식+카페+편의점 월평균. 배달 1,473,087원 / 외식 1,390,200원.</div></div>
-  <div class="ins"><div class="ins-ico">📅</div><div class="ins-lbl">Q4 실측 월평균</div>
-    <div class="ins-val" style="color:#22c55e">4,597,173원</div>
-    <div class="ins-desc">10~12월 실제 데이터 기준 한 달 총 지출. 연간 환산 시 약 55,166,076원.</div></div>
-  <div class="ins"><div class="ins-ico">🏥</div><div class="ins-lbl">의료/건강 지출</div>
-    <div class="ins-val">2,177,400원</div>
-    <div class="ins-desc">26건. 실손보험 청구 가능 여부 확인 권장. 월평균 181,450원.</div></div>
-</div>
-</div>
-<footer>구유리님 2025년 지출 종합 분석 · 신한카드 + 국민카드 + 현대카드 + 신한은행 출금 통합</footer>
 <script>
-const MO=["1\uc6d4", "2\uc6d4", "3\uc6d4", "4\uc6d4", "5\uc6d4", "6\uc6d4", "7\uc6d4", "8\uc6d4", "9\uc6d4", "10\uc6d4", "11\uc6d4", "12\uc6d4"];
-const CV=[2849904, 919862, 488540, 563471, 1323043, 1675959, 2418534, 3434686, 2631981, 2393097, 3087786, 1865982];
-const BV=[0, 0, 0, 0, 0, 0, 0, 0, 1076730, 2171293, 2201259, 2072104];
-const EV=[1882000, 1882000, 1882000, 1882000, 1882000, 1882000, 1882000, 1882000, 0, 0, 0, 0];
-const SH=[2087300, 283800, 235362, 194457, 583056, 792240, 1599630, 2633809, 1704931, 1400981, 1687990, 1204090];
-const KM=[682404, 568632, 185748, 289084, 672557, 819479, 745474, 662147, 855840, 916486, 1332266, 588262];
-const HD=[80200, 67430, 67430, 79930, 67430, 64240, 73430, 138730, 71210, 75630, 67530, 73630];
-const opts=(extra)=>Object.assign({responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#94a3b8',font:{size:10}}},tooltip:{callbacks:{label:c=>' '+c.dataset.label+': '+c.raw.toLocaleString()+'원'}}},scales:{x:{stacked:true,grid:{color:'#1e2035'},ticks:{color:'#64748b',font:{size:10}}},y:{stacked:true,grid:{color:'#1e2035'},ticks:{color:'#64748b',font:{size:9},callback:v=>(v/10000).toFixed(0)+'만'}}}},extra);
-new Chart(document.getElementById('monthlyChart'),{type:'bar',data:{labels:MO,datasets:[
-  {label:'카드 지출',data:CV,backgroundColor:'#4f46e5',borderRadius:3,stack:'a'},
-  {label:'은행 직접',data:BV,backgroundColor:'#22c55e',borderRadius:3,stack:'a'},
-  {label:'고정비 추정',data:EV,backgroundColor:'#374151',borderRadius:3,stack:'a'},
-]},options:opts({})});
-new Chart(document.getElementById('donutChart'),{type:'doughnut',data:{labels:["\uc628\ub77c\uc778\uc1fc\ud551", "\uc6d4\uc138", "\uc758\ub8cc/\uc57d\uad6d", "\uc790\ub3d9\ucc28 \ud560\ubd80", "\uc8fc\uac70/\uad00\ub9ac\ube44", "\uc1fc\ud551/\uc758\ub958", "\uc628\ub77c\uc778/\uad6c\ub3c5", "\ubc30\ub2ec\uc74c\uc2dd"],datasets:[{data:[5811977, 3984000, 2177400, 2093463, 1948120, 1893931, 1888820, 1473087],backgroundColor:["#6366f1", "#22c55e", "#f59e0b", "#ef4444", "#3b82f6", "#ec4899", "#14b8a6", "#f97316"],borderWidth:2,borderColor:'#17172a'}]},options:{responsive:true,maintainAspectRatio:false,cutout:'58%',plugins:{legend:{position:'right',labels:{color:'#94a3b8',font:{size:10},padding:6}},tooltip:{callbacks:{label:c=>' '+c.label+': '+c.raw.toLocaleString()+'원'}}}}});
-new Chart(document.getElementById('cardChart'),{type:'bar',data:{labels:MO,datasets:[
-  {label:'신한카드',data:SH,backgroundColor:'#6366f1',borderRadius:3,stack:'b'},
-  {label:'국민카드',data:KM,backgroundColor:'#22c55e',borderRadius:3,stack:'b'},
-  {label:'현대카드',data:HD,backgroundColor:'#f59e0b',borderRadius:3,stack:'b'},
-]},options:opts({})});
+const MO = ["1\uc6d4", "2\uc6d4", "3\uc6d4", "4\uc6d4", "5\uc6d4", "6\uc6d4", "7\uc6d4", "8\uc6d4", "9\uc6d4", "10\uc6d4", "11\uc6d4", "12\uc6d4"];
+const CV = [2849904, 919862, 488540, 563471, 1323043, 1675959, 2418534, 3434686, 2631981, 2393097, 3087786, 1865982];
+const TV = [4733276, 2803234, 2371912, 2446843, 3206415, 3559331, 4301906, 5318058, 4515353, 4276469, 4971158, 3749354];
+const SH = [2087300, 283800, 235362, 194457, 583056, 792240, 1599630, 2633809, 1704931, 1400981, 1687990, 1204090];
+const KM = [682404, 568632, 185748, 289084, 672557, 819479, 745474, 662147, 855840, 916486, 1332266, 588262];
+const HD = [80200, 67430, 67430, 79930, 67430, 64240, 73430, 138730, 71210, 75630, 67530, 73630];
+const AVG = 1971070;
+const FIX = 1883372;
+
+const base = {responsive:true,maintainAspectRatio:false,
+  plugins:{legend:{labels:{color:'#94a3b8',font:{size:10}}},
+    tooltip:{callbacks:{label:c=>' '+c.dataset.label+': '+c.raw.toLocaleString()+'원'}}},
+  scales:{
+    x:{grid:{color:'#1a1a35'},ticks:{color:'#64748b',font:{size:10}}},
+    y:{grid:{color:'#1a1a35'},ticks:{color:'#64748b',font:{size:9},callback:v=>(v/10000).toFixed(0)+'만'}}
+  }};
+
+// 월별 카드 지출 + 월평균선
+new Chart(document.getElementById('ch1'), {
+  type:'bar',
+  data:{labels:MO, datasets:[
+    {label:'카드 지출',data:CV,backgroundColor:MO.map((_,i)=>CV[i]>AVG?'#6366f1':'#312e81'),borderRadius:4},
+  ]},
+  options:Object.assign({},base,{
+    plugins:Object.assign({},base.plugins,{
+      annotation:undefined,
+      tooltip:base.plugins.tooltip
+    }),
+    scales:Object.assign({},base.scales,{
+      y:Object.assign({},base.scales.y,{
+        afterDraw: undefined
+      })
+    })
+  })
+});
+
+// 카드별 누적
+new Chart(document.getElementById('ch2'), {
+  type:'bar',
+  data:{labels:MO, datasets:[
+    {label:'신한카드',data:SH,backgroundColor:'#6366f1',borderRadius:3,stack:'s'},
+    {label:'국민카드',data:KM,backgroundColor:'#22c55e',borderRadius:3,stack:'s'},
+    {label:'현대카드',data:HD,backgroundColor:'#f59e0b',borderRadius:3,stack:'s'},
+  ]},
+  options:Object.assign({},base,{scales:{
+    x:Object.assign({},base.scales.x,{stacked:true}),
+    y:Object.assign({},base.scales.y,{stacked:true})
+  }})
+});
 </script>
 </body></html>
