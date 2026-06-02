@@ -1,18 +1,28 @@
-import { Button, Space, Typography } from "antd";
-import { useMemo, type ReactNode } from "react";
-import { useLayoutAdaptation } from "@/hooks/useLayoutAdaptation";
-import { useAppTheme } from "@/providers/AppThemeProvider";
-import { useAppDesignToken } from "@/theme/appDesignToken";
-import { createAppShellStyles } from "./AppShell.style";
+import { Button, Menu, Space } from 'antd';
+import { DashboardOutlined, FundOutlined, LineChartOutlined, CreditCardOutlined } from '@ant-design/icons';
+import { useMemo, type ReactNode } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useLayoutAdaptation } from '@/hooks/useLayoutAdaptation';
+import { useAppTheme } from '@/providers/AppThemeProvider';
+import { useAppDesignToken } from '@/theme/appDesignToken';
+import { createAppShellStyles } from './AppShell.style';
 
-const { Text } = Typography;
 
 type Props = { children: ReactNode };
+
+const NAV_ITEMS = [
+  { key: '/',          icon: <DashboardOutlined />,  label: '대시보드' },
+  { key: '/budget',    icon: <FundOutlined />,        label: '월 예산' },
+  { key: '/cashflow',  icon: <LineChartOutlined />,   label: '현금흐름' },
+  { key: '/spending',  icon: <CreditCardOutlined />,  label: '지출 분석' },
+];
 
 export function AppShell({ children }: Props) {
   const { token } = useAppDesignToken();
   const layout = useLayoutAdaptation();
-  const { mode, setMode, uiScale, setUiScale } = useAppTheme();
+  const { mode, setMode } = useAppTheme();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const styles = useMemo(
     () => createAppShellStyles({ token, layout }),
@@ -23,21 +33,12 @@ export function AppShell({ children }: Props) {
     <div style={styles.shell}>
       <header style={styles.header}>
         <a href="/" style={styles.brand} aria-label="홈으로 이동">
-          App
+          💰 재정 관리
         </a>
         <div style={styles.headerActions}>
           <Space size="small" wrap>
-            <Text type="secondary">
-              scale {uiScale.toFixed(2)}
-            </Text>
-            <Button
-              size="small"
-              onClick={() => setUiScale(uiScale <= 0.9 ? 1 : 0.88)}
-            >
-              토글 스케일
-            </Button>
-            <Button size="small" onClick={() => setMode(mode === "dark" ? "light" : "dark")}>
-              {mode === "dark" ? "라이트" : "다크"}
+            <Button size="small" onClick={() => setMode(mode === 'dark' ? 'light' : 'dark')}>
+              {mode === 'dark' ? '☀️ 라이트' : '🌙 다크'}
             </Button>
           </Space>
         </div>
@@ -46,9 +47,38 @@ export function AppShell({ children }: Props) {
         {!layout.isMobile && (
           <aside style={styles.sider} aria-label="사이드 내비게이션">
             <nav style={styles.siderInner}>
-              <Text>사이드바 (md+)</Text>
+              <Menu
+                mode="inline"
+                selectedKeys={[location.pathname]}
+                style={{ border: 'none', background: 'transparent' }}
+                items={NAV_ITEMS.map(item => ({
+                  key: item.key,
+                  icon: item.icon,
+                  label: item.label,
+                  onClick: () => navigate(item.key),
+                }))}
+              />
             </nav>
           </aside>
+        )}
+        {layout.isMobile && (
+          <div style={{ display: 'flex', borderBottom: `1px solid ${token.colorBorderSecondary}`, background: token.colorBgContainer, overflowX: 'auto' }}>
+            {NAV_ITEMS.map(item => (
+              <button
+                key={item.key}
+                onClick={() => navigate(item.key)}
+                style={{
+                  flex: 1, padding: '10px 4px', border: 'none', background: 'transparent',
+                  cursor: 'pointer', fontSize: 11, color: location.pathname === item.key ? '#6366f1' : token.colorTextSecondary,
+                  borderBottom: location.pathname === item.key ? '2px solid #6366f1' : '2px solid transparent',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                <div style={{ fontSize: 16, marginBottom: 2 }}>{item.icon}</div>
+                {item.label}
+              </button>
+            ))}
+          </div>
         )}
         <main id="app-main" style={styles.main} tabIndex={-1}>
           {children}
