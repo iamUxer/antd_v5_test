@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>2026 재정 계획</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+        background: #0d0d14;
+        color: #e2e8f0;
+        min-height: 100vh;
+      }
+      .hero {
+        background: linear-gradient(140deg, #0f0a2e, #1a0f4e 50%, #0f0a2e);
+        padding: 48px 20px 60px;
+        text-align: center;
+      }
+      .hero h1 {
+        font-size: 26px;
+        font-weight: 800;
+        color: #fff;
+        margin-bottom: 6px;
+      }
+      .hero p {
+        color: #818cf8;
+        font-size: 13px;
+        margin-bottom: 32px;
+      }
+      .kpi-row {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .kpi {
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 14px;
+        padding: 16px 22px;
+        min-width: 145px;
+        text-align: center;
+      }
+      .kpi .l {
+        font-size: 10px;
+        color: #acadf0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 5px;
+      }
+      .kpi .v {
+        font-size: 19px;
+        font-weight: 800;
+        color: #fff;
+      }
+      .kpi .s {
+        font-size: 10px;
+        color: #77aaf4;
+        margin-top: 3px;
+      }
+      .main {
+        max-width: 1060px;
+        margin: 0 auto;
+        padding: 28px 16px 48px;
+      }
+      .sec {
+        font-size: 15px;
+        font-weight: 700;
+        margin: 36px 0 14px;
+        border-left: 4px solid #6366f1;
+        padding-left: 10px;
+      }
+      .g2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      @media (max-width: 660px) {
+        .g2 {
+          grid-template-columns: 1fr;
+        }
+      }
+      .card {
+        background: #13132a;
+        border: 1px solid #1f1f3a;
+        border-radius: 14px;
+        padding: 20px;
+      }
+      .card h3 {
+        font-size: 12px;
+        color: #77aaf4;
+        margin-bottom: 14px;
+        font-weight: 600;
+      }
+      .cw {
+        position: relative;
+        height: 260px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+      th {
+        font-size: 11px;
+        color: #77aaf4;
+        padding: 8px 10px;
+        text-align: left;
+        border-bottom: 2px solid #1f1f3a;
+        font-weight: 600;
+      }
+      td {
+        padding: 9px 10px;
+        border-bottom: 1px solid #1a1a35;
+      }
+      tr:last-child td {
+        border: none;
+      }
+
+      .ins {
+        background: #13132a;
+        border: 1px solid #1f1f3a;
+        border-radius: 12px;
+        padding: 16px;
+      }
+      .ins-val {
+        font-size: 17px;
+        color: #00ffff;
+        font-weight: 800;
+      }
+      .ins-ico {
+        font-size: 26px;
+        margin-bottom: 8px;
+      }
+      .ins-lbl {
+        font-size: 10px;
+        color: #fff;
+        margin-bottom: 4px;
+      }
+      .ins-desc {
+        font-size: 10px;
+        color: #fff;
+        margin-top: 5px;
+        line-height: 1.6;
+      }
+      .amt {
+        text-align: right;
+        font-weight: 600;
+      }
+      .total-row td {
+        background: #1a1a35;
+        font-weight: 800;
+        color: #818cf8;
+      }
+      .sub-hd {
+        background: #0f0f22;
+        font-size: 11px;
+        color: #6366f1;
+        font-weight: 700;
+      }
+      .badge {
+        font-size: 9px;
+        padding: 2px 6px;
+        border-radius: 4px;
+        margin-left: 6px;
+      }
+      .badge-fix {
+        background: #1e1b4b;
+        color: #818cf8;
+      }
+      .badge-var {
+        background: #14532d;
+        color: #22c55e;
+      }
+      .badge-sp {
+        background: #431407;
+        color: #f97316;
+      }
+      .pos {
+        color: #22c55e;
+      }
+      .neg {
+        color: #ef4444;
+      }
+      .warn {
+        color: #f59e0b;
+      }
+      .cf-row td {
+        transition: background 0.2s;
+      }
+      .cf-row:hover td {
+        background: #1a1a35;
+      }
+      .flip-row td {
+        background: rgba(34, 197, 94, 0.05);
+        border-left: 3px solid #22c55e;
+      }
+      .special-row td {
+        background: rgba(249, 115, 22, 0.05);
+      }
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 6px;
+      }
+      .insight-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 12px;
+      }
+      footer {
+        text-align: center;
+        padding: 24px;
+        color: #374151;
+        font-size: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="hero">
+      <h1>📊 2026~2027 재정 계획 리포트</h1>
+      <p>지출 분석 · 월 예산 · 현금흐름 예측</p>
+      <div class="kpi-row">
+        <div class="kpi">
+          <div class="l">월 총 예산</div>
+          <div class="v">3,705,871원</div>
+          <div class="s">은행+카드</div>
+        </div>
+        <div class="kpi">
+          <div class="l">월 순저축 (예산 준수 시)</div>
+          <div class="v" style="color: #22c55e">+2,514,129원</div>
+          <div class="s">7월 이후 (특별월 제외)</div>
+        </div>
+        <div class="kpi">
+          <div class="l">흑자 전환</div>
+          <div class="v" style="color: #f59e0b">2026년 9월</div>
+          <div class="s">마이너스통장 해소</div>
+        </div>
+        <div class="kpi">
+          <div class="l">2026 말 예상 잔액</div>
+          <div class="v">8,872,077원</div>
+          <div class="s">12월 기준</div>
+        </div>
+        <div class="kpi">
+          <div class="l">2027 말 예상 잔액</div>
+          <div class="v">37,007,885원</div>
+          <div class="s">12월 기준</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="main">
+      <!-- 예산 섹션 -->
+      <div class="sec">🔒 월 예산안</div>
+      <div class="g2">
+        <div class="card">
+          <h3>🏦 은행 고정비 — 2,261,786원/월</h3>
+          <table>
+            <tr>
+              <td>🏠 월세</td>
+              <td class="amt">1,045,800원</td>
+            </tr>
+            <tr>
+              <td>🚗 BMW 할부</td>
+              <td class="amt">697,821원</td>
+            </tr>
+            <tr>
+              <td>💸 대출 이자</td>
+              <td class="amt">175,000원</td>
+            </tr>
+            <tr>
+              <td>🛡️ KB 보험 (월납)</td>
+              <td class="amt">171,985원</td>
+            </tr>
+            <tr>
+              <td>🏥 건강보험</td>
+              <td class="amt">77,000원</td>
+            </tr>
+            <tr>
+              <td>🏛️ 국민연금</td>
+              <td class="amt">33,000원</td>
+            </tr>
+            <tr>
+              <td>🛡️ 손해보험 (하나)</td>
+              <td class="amt">20,280원</td>
+            </tr>
+            <tr>
+              <td>❤️ 기부/후원</td>
+              <td class="amt">27,000원</td>
+            </tr>
+            <tr>
+              <td>💧 쿠쿠 렌탈료</td>
+              <td class="amt">11,900원</td>
+            </tr>
+            <tr>
+              <td>🗳️ 당비/회비</td>
+              <td class="amt">2,000원</td>
+            </tr>
+            <tr class="total-row">
+              <td><b>소계</b></td>
+              <td class="amt"><b>2,261,786원</b></td>
+            </tr>
+          </table>
+        </div>
+        <div class="card">
+          <h3>💳 카드 항목 — 1,527,418원/월</h3>
+          <table>
+            <tr>
+              <td>🏠 관리비</td>
+              <td class="amt">162,343원</td>
+            </tr>
+            <tr>
+              <td>📱 SKT 통신비</td>
+              <td class="amt">61,742원</td>
+            </tr>
+            <tr>
+              <td>⛽ 주유/주차</td>
+              <td class="amt">300,000원</td>
+            </tr>
+            <tr>
+              <td>🐶 럭키</td>
+              <td class="amt">40,000원</td>
+            </tr>
+            <tr>
+              <td>📦 쿠팡 식료품/생필품</td>
+              <td class="amt">300,000원</td>
+            </tr>
+            <tr>
+              <td>🍽️ 외식/용돈</td>
+              <td class="amt">200,000원</td>
+            </tr>
+            <tr>
+              <td>🍱 점심 식대</td>
+              <td class="amt">180,000원</td>
+            </tr>
+            <tr>
+              <td>👕 쇼핑/미용</td>
+              <td class="amt">200,000원</td>
+            </tr>
+            <tr>
+              <td>🏃 운동비 (연 100만÷12)</td>
+              <td class="amt">83,333원</td>
+            </tr>
+            <tr class="total-row">
+              <td><b>소계</b></td>
+              <td class="amt"><b>1,444,085원</b></td>
+            </tr>
+          </table>
+          <br />
+          <h3>📅 특별예산 (연 1회)</h3>
+          <table>
+            <tr>
+              <td>
+                🏋️ 헬스장 등록비
+                <span style="font-size: 10px; color: #f59e0b">6월 카드</span>
+              </td>
+              <td class="amt">1,000,000원</td>
+            </tr>
+            <tr>
+              <td>
+                🚘 자동차보험료
+                <span style="font-size: 10px; color: #f59e0b">8월 납부</span>
+              </td>
+              <td class="amt">600,000원</td>
+            </tr>
+            <tr>
+              <td>
+                🚘 자동차세
+                <span style="font-size: 10px; color: #f59e0b">1월 납부</span>
+              </td>
+              <td class="amt">433,740원</td>
+            </tr>
+            <tr class="total-row">
+              <td><b>연간 합계</b></td>
+              <td class="amt"><b>2,033,740원</b></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- 현금흐름 차트 -->
+      <div class="sec">📈 통장 잔액 예측 (2026~2027)</div>
+      <div class="card" style="margin-bottom: 14px">
+        <h3>월별 잔액 추이</h3>
+        <div class="cw" style="height: 300px">
+          <canvas id="cfChart"></canvas>
+        </div>
+      </div>
+
+      <!-- 현금흐름 테이블 -->
+      <div class="card">
+        <h3>월별 상세 현금흐름</h3>
+        <table>
+          <tr>
+            <th>월</th>
+            <th>수입</th>
+            <th>지출</th>
+            <th>증감</th>
+            <th>잔액</th>
+            <th>비고</th>
+          </tr>
+          <tr class="cf-row">
+            <td><b>시작 잔액</b></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="amt neg"><b>-8,093,011원</b></td>
+            <td style="font-size: 11px; color: #77f4ec">마이너스 통장</td>
+          </tr>
+          <tr class="cf-row">
+            <td>2026년 6월</td>
+            <td class="amt pos">7,322,100원</td>
+            <td class="amt">3,841,786원</td>
+            <td class="amt pos">+3,480,314원</td>
+            <td class="amt neg">-4,612,697원</td>
+            <td style="font-size: 11px; color: #f59e0b">
+              급여+종소세환급 / 카드 초과분
+            </td>
+          </tr>
+          <tr class="cf-row">
+            <td>2026년 7월</td>
+            <td class="amt pos">6,220,000원</td>
+            <td class="amt">3,789,204원</td>
+            <td class="amt pos">+2,430,796원</td>
+            <td class="amt neg">-2,181,901원</td>
+            <td style="font-size: 11px; color: #77f4ec">첫 예산 적용</td>
+          </tr>
+          <tr class="cf-row special-row">
+            <td>2026년 8월</td>
+            <td class="amt pos">6,220,000원</td>
+            <td class="amt">4,389,204원</td>
+            <td class="amt pos">+1,830,796원</td>
+            <td class="amt neg">-1,184,439원</td>
+            <td style="font-size: 11px; color: #f97316">
+              🚘 자동차보험 600,000원
+            </td>
+          </tr>
+          <tr class="cf-row flip-row">
+            <td><b>2026년 9월 ← 흑자 전환</b></td>
+            <td class="amt pos">6,220,000원</td>
+            <td class="amt">3,789,204원</td>
+            <td class="amt pos">+2,430,796원</td>
+            <td class="amt pos"><b>+1,329,690원</b></td>
+            <td style="font-size: 11px; color: #22c55e">✅ 마이너스 해소</td>
+          </tr>
+          <tr class="cf-row">
+            <td>2026년 10월</td>
+            <td class="amt pos">6,220,000원</td>
+            <td class="amt">3,789,204원</td>
+            <td class="amt pos">+2,430,796원</td>
+            <td class="amt pos">+4,510,487원</td>
+            <td></td>
+          </tr>
+          <tr class="cf-row">
+            <td>2026년 11월</td>
+            <td class="amt pos">6,220,000원</td>
+            <td class="amt">3,789,204원</td>
+            <td class="amt pos">+2,430,796원</td>
+            <td class="amt pos">+6,941,283원</td>
+            <td></td>
+          </tr>
+          <tr class="cf-row">
+            <td>2026년 12월</td>
+            <td class="amt pos">6,220,000원</td>
+            <td class="amt">3,789,204원</td>
+            <td class="amt pos">+2,430,796원</td>
+            <td class="amt pos"><b>+8,872,077원</b></td>
+            <td style="font-size: 11px; color: #ffe46e">2026년 말</td>
+          </tr>
+          <tr style="height: 6px">
+            <td colspan="6"></td>
+          </tr>
+          <tr class="cf-row special-row">
+            <td>2027년 1월</td>
+            <td class="amt pos">6,220,000원</td>
+            <td class="amt">4,222,944원</td>
+            <td class="amt pos">+1,997,056원</td>
+            <td class="amt pos">+10,952,466원</td>
+            <td style="font-size: 11px; color: #f97316">
+              🚘 자동차세 433,740원
+            </td>
+          </tr>
+          <tr class="cf-row">
+            <td>2027년 2월</td>
+            <td class="amt pos">6,220,000원</td>
+            <td class="amt">3,789,204원</td>
+            <td class="amt pos">+2,430,796원</td>
+            <td class="amt pos">+13,799,931원</td>
+            <td></td>
+          </tr>
+          <tr class="cf-row">
+            <td>2027년 3~7월</td>
+            <td class="amt pos">6,220,000원</td>
+            <td class="amt">3,789,204원</td>
+            <td class="amt pos">+2,430,796원</td>
+            <td class="amt pos">+25,037,240원</td>
+            <td style="font-size: 11px; color: #77f4ec">
+              🏋️ 헬스장 연갱신 포함
+            </td>
+          </tr>
+          <tr class="cf-row special-row">
+            <td>2027년 8월</td>
+            <td class="amt pos">6,220,000원</td>
+            <td class="amt">4,389,204원</td>
+            <td class="amt pos">+1,830,796원</td>
+            <td class="amt pos">+26,951,369원</td>
+            <td style="font-size: 11px; color: #f97316">
+              🚘 자동차보험 600,000원
+            </td>
+          </tr>
+          <tr class="cf-row">
+            <td>2027년 9~12월</td>
+            <td class="amt pos">6,220,000원</td>
+            <td class="amt">3,789,204원</td>
+            <td class="amt pos">+2,430,796원</td>
+            <td class="amt pos"><b>+37,007,885원</b></td>
+            <td style="font-size: 11px; color: #ffe46e">2027년 말</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- 인사이트 -->
+      <div class="sec">💡 핵심 인사이트</div>
+      <div class="insight-grid">
+        <div class="ins">
+          <div class="ins-ico">🔴</div>
+          <div class="ins-lbl">현재 잔액</div>
+          <div class="ins-val neg">-8,093,011원</div>
+          <div class="ins-desc">
+            마이너스 통장. 6월 급여+환급으로 -4.6M으로 개선.
+          </div>
+        </div>
+        <div class="ins">
+          <div class="ins-ico">🟢</div>
+          <div class="ins-lbl">흑자 전환</div>
+          <div class="ins-val warn">2026년 9월</div>
+          <div class="ins-desc">
+            8월 자동차보험 납부 후 9월부터 플러스 잔액 유지.
+          </div>
+        </div>
+        <div class="ins">
+          <div class="ins-ico">💰</div>
+          <div class="ins-lbl">월 순저축</div>
+          <div class="ins-val pos">+2,514,129원</div>
+          <div class="ins-desc">
+            예산 준수 시 매달 약 251만원 자동 저축 효과.
+          </div>
+        </div>
+        <div class="ins">
+          <div class="ins-ico">📅</div>
+          <div class="ins-lbl">2026년 말 잔액</div>
+          <div class="ins-val">8,872,077원</div>
+          <div class="ins-desc">
+            12월 말 기준. 헬스장+자동차보험 포함한 실제 예측값.
+          </div>
+        </div>
+        <div class="ins">
+          <div class="ins-ico">🎯</div>
+          <div class="ins-lbl">2027년 말 잔액</div>
+          <div class="ins-val">37,007,885원</div>
+          <div class="ins-desc">
+            약 3,700만원. 자동차세+보험 포함. 추가 투자 검토 시점.
+          </div>
+        </div>
+        <div class="ins">
+          <div class="ins-ico">⚠️</div>
+          <div class="ins-lbl">주의 사항</div>
+          <div class="ins-val warn" style="font-size: 13px">예산 준수 필수</div>
+          <div class="ins-desc">
+            쇼핑/외식 초과 시 저축 속도 저하. 카드값 월 144만원 유지가 핵심.
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer>구유리님 2026~2027 재정 계획 · 지출분석 기반 현금흐름 예측</footer>
+
+    <script>
+      const labels = [
+        '6월',
+        '7월',
+        '8월',
+        '9월',
+        '10월',
+        '11월',
+        '12월',
+        '27-1월',
+        '27-2월',
+        '27-3월',
+        '27-4월',
+        '27-5월',
+        '27-6월',
+        '27-7월',
+        '27-8월',
+        '27-9월',
+        '27-10월',
+        '27-11월',
+        '27-12월',
+      ];
+      const balances = [
+        -4612697, -3098568, -1184439, 1329690, 3843819, 6357948, 8872077,
+        10952466, 13466595, 15980724, 18494853, 21008982, 23523111, 25037240,
+        26951369, 29465498, 31979627, 34493756, 37007885,
+      ];
+      const colors = balances.map((v) =>
+        v < 0 ? 'rgba(239,68,68,0.7)' : 'rgba(99,102,241,0.7)',
+      );
+
+      new Chart(document.getElementById('cfChart'), {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: '월말 잔액',
+              data: balances,
+              backgroundColor: colors,
+              borderRadius: 4,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: { label: (c) => ' ' + c.raw.toLocaleString() + '원' },
+            },
+          },
+          scales: {
+            x: {
+              grid: { color: '#1a1a35' },
+              ticks: { color: '#fff', font: { size: 10 } },
+            },
+            y: {
+              grid: { color: '#1a1a35' },
+              ticks: {
+                color: '#fff',
+                font: { size: 9 },
+                callback: (v) => (v / 10000000).toFixed(1) + '천만',
+              },
+            },
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

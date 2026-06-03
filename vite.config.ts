@@ -30,4 +30,21 @@ export default defineConfig({
       "@": path.resolve(__dirname, "src"),
     },
   },
+  server: {
+    proxy: {
+      // 브라우저 CORS 회피: 클라이언트는 same-origin(/api/*)만 호출
+      "/api/drive-download": {
+        target: "https://drive.usercontent.google.com",
+        changeOrigin: true,
+        secure: true,
+        rewrite: (p) => p.replace(/^\/api\/drive-download/, "/download"),
+      },
+      "/api/drive-uc": {
+        target: "https://drive.google.com",
+        changeOrigin: true,
+        secure: true,
+        rewrite: (p) => p.replace(/^\/api\/drive-uc/, "/uc"),
+      },
+    },
+  },
 });
