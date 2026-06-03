@@ -118,9 +118,9 @@ const STATIC_CARD_ACTUALS: Record<
     skt: 0,
     fuel: 210_000,
     lucky: 30_000,
-    coupang: 180_000,
-    dining: 215_000,
-    lunch: 110_000,
+    performance: 0,
+    groceries: 180_000,
+    dining: 325_000,
   },
 };
 
@@ -145,12 +145,22 @@ const STATIC_BANK_ACTUALS: Record<
 function categorizeCardItem(tx: LiveCardTransaction): BudgetItem['key'] {
   const text = `${tx.merchant}`.toLowerCase();
   if (/관리비|센트럴푸|입주자/.test(text)) return 'maint';
-  if (/skt|sk텔레콤|통신|cursor/.test(text)) return 'skt';
+  if (/skt|sk텔레콤|t월드|티월드|cursor/.test(text)) return 'skt';
   if (/주유|오일|칼텍스|에너지|주차|톨|하이패스/.test(text)) return 'fuel';
   if (/럭키|동물|펫|애견/.test(text)) return 'lucky';
-  if (/쿠팡|컬리|이마트|홈플러스|마트|슈퍼/.test(text)) return 'coupang';
-  if (/점심|구내|아워홈|엘에스씨푸드/.test(text)) return 'lunch';
-  if (/식당|레스토랑|배달|음식|푸드|쇼핑|헤어|뷰티|의류|올리브영|루이의원/.test(text))
+  if (/쿠팡|컬리|이마트|홈플러스|마트|슈퍼|미표기/.test(text))
+    return 'groceries';
+  if (
+    /네이버플러스|네이버\s*페이|네이버페이|쇼핑|헤어|뷰티|의류|올리브영|루이의원/.test(
+      text,
+    )
+  )
+    return 'performance';
+  if (
+    /점심|구내|아워홈|엘에스씨푸드|식당|레스토랑|배달|음식|푸드|카페|커피|편의점/.test(
+      text,
+    )
+  )
     return 'dining';
   return 'dining';
 }
@@ -285,7 +295,7 @@ export function Budget() {
     });
     // 국민카드는 전액 쿠팡 예산으로 집계
     kbCycleTxs.forEach((tx) => {
-      pushTx(tx, 'coupang', '국민');
+      pushTx(tx, 'groceries', '국민');
     });
     hyundaiCycleTxs.forEach((tx) => {
       pushTx(tx, categorizeCardItem(tx), '현대');
@@ -348,7 +358,7 @@ export function Budget() {
     if (hasLiveCardForMonth) {
       // 국민카드는 전액 쿠팡 예산으로 집계
       kbCycleTxs.forEach((tx) => {
-        baseline.coupang += tx.amount;
+        baseline.groceries += tx.amount;
       });
 
       shinhanCycleTxs.forEach((tx) => {
@@ -391,7 +401,11 @@ export function Budget() {
   const overBudgetItems = useMemo(
     () =>
       cardItems
-        .filter((item) => item.key !== 'lucky' && (cardActualByItem[item.key] ?? 0) > item.amount)
+        .filter(
+          (item) =>
+            item.key !== 'lucky' &&
+            (cardActualByItem[item.key] ?? 0) > item.amount,
+        )
         .map((item) => ({
           name: item.name,
           budget: item.amount,
@@ -830,8 +844,12 @@ export function Budget() {
                     padding: '8px 10px',
                   }}
                 >
-                  <Text strong style={{ color: '#9f1239' }}>{item.name}</Text>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <Text strong style={{ color: '#9f1239' }}>
+                    {item.name}
+                  </Text>
+                  <div
+                    style={{ display: 'flex', alignItems: 'center', gap: 8 }}
+                  >
                     <Text type="secondary" style={{ fontSize: 12 }}>
                       {fmt(item.actual)} / {fmt(item.budget)}
                     </Text>
@@ -1173,23 +1191,45 @@ export function Budget() {
                           padding: '4px 8px 2px',
                         }}
                       >
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <div
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                          }}
+                        >
                           <Text type="secondary">월 수입 기준</Text>
                           <Text>{fmt(MONTHLY_INCOME)}</Text>
                         </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <div
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                          }}
+                        >
                           <Text type="secondary">예산 기준 지출</Text>
                           <Text>-{fmt(MONTHLY_TOTAL)}</Text>
                         </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <div
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                          }}
+                        >
                           <Text type="secondary">실사용 기준 지출</Text>
                           <Text>-{fmt(monthlyActualTotal)}</Text>
                         </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <div
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                          }}
+                        >
                           <Text strong>실사용 기준 순저축</Text>
                           <Text
                             strong
-                            style={{ color: actualSavings >= 0 ? '#22c55e' : '#ef4444' }}
+                            style={{
+                              color: actualSavings >= 0 ? '#22c55e' : '#ef4444',
+                            }}
                           >
                             {actualSavings >= 0 ? '+' : '-'}
                             {fmt(Math.abs(actualSavings))}
@@ -1202,7 +1242,10 @@ export function Budget() {
                             borderTop: '1px dashed #d9d9d9',
                           }}
                         >
-                          <Text strong style={{ display: 'block', marginBottom: 8 }}>
+                          <Text
+                            strong
+                            style={{ display: 'block', marginBottom: 8 }}
+                          >
                             저축 분산 계획
                           </Text>
                           <Table<SavingsAllocationItem>
@@ -1234,7 +1277,10 @@ export function Budget() {
                             <Text
                               strong
                               style={{
-                                color: savingsAllocationGap >= 0 ? '#22c55e' : '#ef4444',
+                                color:
+                                  savingsAllocationGap >= 0
+                                    ? '#22c55e'
+                                    : '#ef4444',
                               }}
                             >
                               {savingsAllocationGap >= 0 ? '+' : '-'}

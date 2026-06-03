@@ -34,11 +34,11 @@ export const bankFixed: BudgetItem[] = [
 export const cardItems: BudgetItem[] = [
   { key: 'maint', name: '관리비', emoji: '🏠', amount: 250_000 },
   { key: 'skt', name: '통신 구독료', emoji: '📱', amount: 100_000 },
-  { key: 'fuel', name: '주유/주차', emoji: '⛽', amount: 300_000 },
   { key: 'lucky', name: '럭키', emoji: '🐶', amount: 100_000 },
-  { key: 'coupang', name: '쿠팡 식료품/생필품', emoji: '📦', amount: 300_000 },
-  { key: 'dining', name: '외식/쇼핑', emoji: '🍽️', amount: 150_000 },
-  { key: 'lunch', name: '점심/간식', emoji: '🍱', amount: 250_000 },
+  { key: 'fuel', name: '주유/주차', emoji: '⛽', amount: 100_000 },
+  { key: 'performance', name: '생산성/쇼핑', emoji: '✅', amount: 250_000 },
+  { key: 'groceries', name: '식료품/생필품', emoji: '📦', amount: 300_000 },
+  { key: 'dining', name: '점심/간식/외식', emoji: '🍽️', amount: 350_000 },
 ];
 
 export const specialBudget: SpecialBudgetItem[] = [
