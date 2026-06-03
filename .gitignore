@@ -7,3 +7,4 @@ dist
 card_analysis.json
 src/spending_report.html
 uploads/
+.vercel

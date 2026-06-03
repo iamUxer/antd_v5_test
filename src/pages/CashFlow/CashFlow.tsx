@@ -4,6 +4,7 @@ import { Bar, BarChart, CartesianGrid, Cell, ReferenceLine, ResponsiveContainer,
 import { INITIAL_BALANCE, type CashFlowRow } from '@/data/cashflow';
 import { MONTHLY_TOTAL, MONTHLY_SAVINGS } from '@/data/budget';
 import { useAdjustedCashflow } from '@/hooks/useAdjustedCashflow';
+import { useLayoutAdaptation } from '@/hooks/useLayoutAdaptation';
 
 const { Title, Text } = Typography;
 const columns: ColumnsType<CashFlowRow> = [
@@ -23,12 +24,14 @@ const columns: ColumnsType<CashFlowRow> = [
     title: '수입',
     dataIndex: 'income',
     align: 'right',
+    responsive: ['sm'],
     render: v => <Text style={{ color: '#22c55e', fontSize: 12 }}>+{v.toLocaleString()}</Text>,
   },
   {
     title: '지출',
     dataIndex: 'expense',
     align: 'right',
+    responsive: ['sm'],
     render: v => <Text style={{ fontSize: 12 }}>{v.toLocaleString()}</Text>,
   },
   {
@@ -44,11 +47,13 @@ const columns: ColumnsType<CashFlowRow> = [
   {
     title: '비고',
     dataIndex: 'note',
+    responsive: ['md'],
     render: (v, _r) => v ? <Text type="secondary" style={{ fontSize: 11 }}>{v}</Text> : null,
   },
 ];
 
 export function CashFlow() {
+  const { isMobile } = useLayoutAdaptation();
   const { cashflow } = useAdjustedCashflow();
 
   const chartData = cashflow.map(r => ({
@@ -81,7 +86,7 @@ export function CashFlow() {
       </Row>
 
       <Card title="월별 잔액 추이" size="small" style={{ marginBottom: 14 }}>
-        <ResponsiveContainer width="100%" height={280}>
+        <ResponsiveContainer width="100%" height={isMobile ? 220 : 280}>
           <BarChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
             <XAxis dataKey="name" tick={{ fontSize: 10 }} />
@@ -110,6 +115,7 @@ export function CashFlow() {
           rowKey="label"
           pagination={false}
           size="small"
+          scroll={{ x: 620 }}
           rowClassName={r => r.isFlip ? 'flip-row' : r.isSpecial ? 'special-row' : ''}
         />
       </Card>

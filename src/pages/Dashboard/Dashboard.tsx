@@ -5,12 +5,14 @@ import { BANK_TOTAL, CARD_TOTAL, MONTHLY_SAVINGS, MONTHLY_TOTAL, cardItems } fro
 import { INITIAL_BALANCE } from '@/data/cashflow';
 import { cardSummary, CARD_ANNUAL_TOTAL } from '@/data/spending';
 import { useAdjustedCashflow } from '@/hooks/useAdjustedCashflow';
+import { useLayoutAdaptation } from '@/hooks/useLayoutAdaptation';
 
 const { Title, Text } = Typography;
 
 const fmt = (n: number) => n.toLocaleString('ko-KR') + '원';
 
 export function Dashboard() {
+  const { isMobile } = useLayoutAdaptation();
   const { cashflow, monthActualByLabel } = useAdjustedCashflow();
   const currentMonth = cashflow.find(r => r.label === '2026-06')!;
   const flipMonth = cashflow.find(r => r.isFlip)!;
@@ -63,7 +65,7 @@ export function Dashboard() {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+                gridTemplateColumns: `repeat(auto-fit, minmax(${isMobile ? 200 : 260}px, 1fr))`,
                 gap: 8,
                 marginTop: 4,
               }}
@@ -248,15 +250,15 @@ export function Dashboard() {
                 <Text style={{ fontSize: 12 }}>6월 10일 급여 (3.3% 제외)</Text>
                 <Tag color="green">+6,092,100원</Tag>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 6 }}>
                 <Text style={{ fontSize: 12 }}>종소세 환급</Text>
                 <Tag color="green">+1,230,000원</Tag>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 6 }}>
                 <Text style={{ fontSize: 12 }}>6월 25일 카드 결제</Text>
                 <Tag color="red">-{liveCardUsage.toLocaleString()}원</Tag>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 6 }}>
                 <Text style={{ fontSize: 12 }}>6월 15일 헬스장 등록 (카드)</Text>
                 <Tag color="orange">-1,000,000원 (7월 청구)</Tag>
               </div>

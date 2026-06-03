@@ -29,6 +29,7 @@ import {
   type SpecialBudgetItem,
 } from '@/data/budget';
 import { useLiveFinanceData } from '@/hooks/useLiveFinanceData';
+import { useLayoutAdaptation } from '@/hooks/useLayoutAdaptation';
 import type { LiveCardTransaction } from '@/data/liveSpending';
 
 const { Title, Text } = Typography;
@@ -201,6 +202,7 @@ function filterByDateRange(
 }
 
 export function Budget() {
+  const { isMobile } = useLayoutAdaptation();
   const {
     data: liveFinance,
     loading,
@@ -573,6 +575,7 @@ export function Budget() {
       key: 'source',
       width: 80,
       align: 'center',
+      responsive: ['md'],
       render: (v: CardDetailRow['source']) => <Tag>{v}</Tag>,
     },
   ];
@@ -591,20 +594,21 @@ export function Budget() {
           style={{
             width: '100%',
             display: 'flex',
+            flexWrap: isMobile ? 'wrap' : 'nowrap',
             justifyContent: 'space-between',
-            alignItems: 'center',
-            gap: 14,
+            alignItems: isMobile ? 'flex-start' : 'center',
+            gap: isMobile ? 8 : 14,
             paddingRight: 8,
           }}
         >
-          <span style={{ minWidth: 108 }}>
+          <span style={{ minWidth: isMobile ? undefined : 108 }}>
             {item.emoji} {item.name}
           </span>
           <div
             style={{
               flex: 1,
-              minWidth: 140,
-              maxWidth: 260,
+              minWidth: isMobile ? '100%' : 140,
+              maxWidth: isMobile ? '100%' : 260,
               display: 'flex',
               height: 8,
               borderRadius: 999,
@@ -641,7 +645,7 @@ export function Budget() {
               </>
             )}
           </div>
-          <Space size={10}>
+          <Space size={10} wrap>
             <Text type="secondary" style={{ fontSize: 12 }}>
               실사용 {fmt(actual)}
             </Text>
@@ -660,6 +664,7 @@ export function Budget() {
             rowKey="id"
             size="small"
             pagination={false}
+            scroll={{ x: 560 }}
           />
         ) : (
           <Text type="secondary" style={{ fontSize: 12 }}>
@@ -685,6 +690,7 @@ export function Budget() {
       key: 'count',
       width: 120,
       align: 'right',
+      responsive: ['sm'],
       render: (v: number) => <Text>{v.toLocaleString()}건</Text>,
     },
     {
@@ -730,15 +736,21 @@ export function Budget() {
 
   return (
     <div style={{ paddingBottom: 40 }}>
-      <Row justify="space-between" align="middle" style={{ marginBottom: 12 }}>
-        <Col>
+      <Row
+        justify="space-between"
+        align={isMobile ? 'top' : 'middle'}
+        gutter={[8, 8]}
+        style={{ marginBottom: 12 }}
+      >
+        <Col xs={24} sm="auto">
           <Title level={4} style={{ marginBottom: 0 }}>
             🔒 월 예산안
           </Title>
         </Col>
-        <Col>
-          <Space size="small">
+        <Col xs={24} sm="auto">
+          <Space size="small" wrap>
             <Button
+              size="small"
               icon={<LeftOutlined />}
               disabled={selectedIndex <= 0}
               onClick={() =>
@@ -748,12 +760,14 @@ export function Budget() {
               }
             />
             <Select
+              size="small"
               value={selectedMonth}
               onChange={setSelectedMonth}
-              style={{ width: 150 }}
+              style={{ width: isMobile ? 130 : 150 }}
               options={MONTH_OPTIONS}
             />
             <Button
+              size="small"
               icon={<RightOutlined />}
               disabled={
                 selectedIndex < 0 || selectedIndex >= MONTH_OPTIONS.length - 1
@@ -850,6 +864,7 @@ export function Budget() {
               pagination={false}
               size="small"
               footer={bankFooter}
+              scroll={{ x: 620 }}
             />
           </Card>
         </Col>
@@ -952,6 +967,7 @@ export function Budget() {
                           rowKey="key"
                           size="small"
                           pagination={false}
+                          scroll={{ x: 420 }}
                         />
                       ) : (
                         <Text type="secondary" style={{ fontSize: 12 }}>
@@ -1033,6 +1049,7 @@ export function Budget() {
                           rowKey="id"
                           size="small"
                           pagination={false}
+                          scroll={{ x: 520 }}
                         />
                       ) : (
                         <Text type="secondary" style={{ fontSize: 12 }}>
@@ -1054,6 +1071,7 @@ export function Budget() {
               rowKey="key"
               pagination={false}
               size="small"
+              scroll={{ x: 500 }}
               footer={() => (
                 <div
                   style={{ display: 'flex', justifyContent: 'space-between' }}
@@ -1193,6 +1211,7 @@ export function Budget() {
                             rowKey="key"
                             size="small"
                             pagination={false}
+                            scroll={{ x: 360 }}
                           />
                           <div
                             style={{

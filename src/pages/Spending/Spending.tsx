@@ -5,6 +5,7 @@ import { spendingCategories, cardSummary, monthlyCardData, CARD_ANNUAL_TOTAL, CA
 import type { SpendingCategory } from '@/data/spending';
 import type { LiveCardTransaction } from '@/data/liveSpending';
 import { useLiveShinhanSpending } from '@/hooks/useLiveShinhanSpending';
+import { useLayoutAdaptation } from '@/hooks/useLayoutAdaptation';
 
 const { Title, Text } = Typography;
 
@@ -26,6 +27,7 @@ const columns: ColumnsType<SpendingCategory> = [
     title: '연간',
     dataIndex: 'annual',
     align: 'right',
+    responsive: ['sm'],
     render: v => <Text style={{ fontSize: 12 }}>{v.toLocaleString()}원</Text>,
   },
   {
@@ -38,6 +40,7 @@ const columns: ColumnsType<SpendingCategory> = [
     title: '비중',
     dataIndex: 'annual',
     align: 'right',
+    responsive: ['md'],
     render: v => <Text type="secondary" style={{ fontSize: 11 }}>{(v / CARD_ANNUAL_TOTAL * 100).toFixed(1)}%</Text>,
   },
 ];
@@ -58,6 +61,7 @@ const liveColumns: ColumnsType<LiveCardTransaction> = [
     dataIndex: 'installment',
     key: 'installment',
     width: 90,
+    responsive: ['md'],
     render: (v?: string) => <Text type="secondary">{v ?? '-'}</Text>,
   },
 ];
@@ -68,6 +72,7 @@ const pieData = spendingCategories.slice(0, 8).map(c => ({
 }));
 
 export function Spending() {
+  const { isMobile } = useLayoutAdaptation();
   const { data: live, loading, error, refresh, loadedAtText } = useLiveShinhanSpending();
 
   return (
@@ -117,6 +122,7 @@ export function Spending() {
           rowKey="id"
           size="small"
           pagination={{ pageSize: 10, showSizeChanger: false }}
+          scroll={{ x: 560 }}
           locale={{ emptyText: loading ? '동기화 중...' : '데이터 없음' }}
         />
       </Card>
@@ -136,7 +142,7 @@ export function Spending() {
       <Row gutter={[14, 14]} style={{ marginBottom: 14 }}>
         <Col xs={24} md={12}>
           <Card title="카테고리 비중" size="small">
-            <ResponsiveContainer width="100%" height={260}>
+            <ResponsiveContainer width="100%" height={isMobile ? 220 : 260}>
               <PieChart>
                 <Pie data={pieData} cx="50%" cy="50%" innerRadius={60} outerRadius={100} dataKey="value" label={({ percent }) => percent != null ? `${(percent * 100).toFixed(0)}%` : ''} labelLine={false}>
                   {pieData.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
@@ -149,7 +155,7 @@ export function Spending() {
         </Col>
         <Col xs={24} md={12}>
           <Card title="카드별 월별 지출" size="small">
-            <ResponsiveContainer width="100%" height={260}>
+            <ResponsiveContainer width="100%" height={isMobile ? 220 : 260}>
               <BarChart data={monthlyCardData} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                 <XAxis dataKey="month" tick={{ fontSize: 10 }} />
@@ -172,6 +178,7 @@ export function Spending() {
           rowKey="key"
           pagination={false}
           size="small"
+          scroll={{ x: 620 }}
         />
       </Card>
     </div>
