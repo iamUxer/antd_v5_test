@@ -49,6 +49,7 @@ export function createAppShellStyles({
     body: {
       flex: 1,
       display: "flex",
+      flexDirection: isMobile ? "column" : "row",
       minHeight: 0,
     },
     sider: {

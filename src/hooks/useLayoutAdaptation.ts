@@ -5,9 +5,9 @@ export type BreakpointKey = "xs" | "sm" | "md" | "lg" | "xl" | "xxl";
 
 export type LayoutAdaptation = {
   screens: Record<string, boolean>;
-  /** xs만 true이거나 sm 미만 */
+  /** lg 미만 (모바일/태블릿 포함) */
   isMobile: boolean;
-  /** md 이상 */
+  /** lg 이상 */
   isDesktop: boolean;
   prefersReducedMotion: boolean;
 };
@@ -30,8 +30,9 @@ export function useLayoutAdaptation(): LayoutAdaptation {
   }, []);
 
   return useMemo(() => {
-    const isMobile = Boolean(screens.xs && !screens.sm);
-    const isDesktop = Boolean(screens.md);
+    // 1024px(lg) 미만은 모두 모바일 레이아웃으로 취급
+    const isMobile = !screens.lg;
+    const isDesktop = Boolean(screens.lg);
     return {
       screens: screens as Record<string, boolean>,
       isMobile,

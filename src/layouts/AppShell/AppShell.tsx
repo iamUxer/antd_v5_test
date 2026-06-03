@@ -44,7 +44,7 @@ export function AppShell({ children }: Props) {
         </div>
       </header>
       <div style={styles.body}>
-        {!layout.isMobile && (
+        {layout.isDesktop && (
           <aside style={styles.sider} aria-label="사이드 내비게이션">
             <nav style={styles.siderInner}>
               <Menu
@@ -61,8 +61,8 @@ export function AppShell({ children }: Props) {
             </nav>
           </aside>
         )}
-        {layout.isMobile && (
-          <div style={{ display: 'flex', borderBottom: `1px solid ${token.colorBorderSecondary}`, background: token.colorBgContainer, overflowX: 'auto' }}>
+        {!layout.isDesktop && (
+          <div style={{ display: 'flex', width: '100%', borderBottom: `1px solid ${token.colorBorderSecondary}`, background: token.colorBgContainer, overflowX: 'auto' }}>
             {NAV_ITEMS.map(item => (
               <button
                 key={item.key}
