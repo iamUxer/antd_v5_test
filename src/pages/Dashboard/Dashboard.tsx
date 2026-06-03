@@ -1,23 +1,101 @@
-import { Card, Col, Progress, Row, Statistic, Tag, Typography } from 'antd';
+import { Alert, Card, Col, Progress, Row, Statistic, Tag, Typography } from 'antd';
 import { ArrowUpOutlined, BankOutlined } from '@ant-design/icons';
-import { BANK_TOTAL, CARD_TOTAL, MONTHLY_SAVINGS, MONTHLY_TOTAL } from '@/data/budget';
-import { cashFlowData, INITIAL_BALANCE } from '@/data/cashflow';
+import { useMemo } from 'react';
+import { BANK_TOTAL, CARD_TOTAL, MONTHLY_SAVINGS, MONTHLY_TOTAL, cardItems } from '@/data/budget';
+import { INITIAL_BALANCE } from '@/data/cashflow';
 import { cardSummary, CARD_ANNUAL_TOTAL } from '@/data/spending';
+import { useAdjustedCashflow } from '@/hooks/useAdjustedCashflow';
 
 const { Title, Text } = Typography;
 
 const fmt = (n: number) => n.toLocaleString('ko-KR') + '원';
 
 export function Dashboard() {
-  const currentMonth = cashFlowData.find(r => r.label === '2026-06')!;
-  const flipMonth = cashFlowData.find(r => r.isFlip)!;
-  const end2026 = cashFlowData.filter(r => r.year === 2026).at(-1)!;
-  const end2027 = cashFlowData.at(-1)!;
+  const { cashflow, monthActualByLabel } = useAdjustedCashflow();
+  const currentMonth = cashflow.find(r => r.label === '2026-06')!;
+  const flipMonth = cashflow.find(r => r.isFlip)!;
+  const end2026 = cashflow.filter(r => r.year === 2026).at(-1)!;
+  const end2027 = cashflow.at(-1)!;
+  const juneActual = monthActualByLabel['2026-06'];
+  const liveCardUsage = juneActual?.cardUsage ?? 0;
+  const liveBankUsage = juneActual?.bankUsage ?? 0;
+  const cardGap = CARD_TOTAL - liveCardUsage;
+  const bankGap = BANK_TOTAL - liveBankUsage;
+  const cardActualByKey = useMemo(() => {
+    const baseline = Object.fromEntries(cardItems.map((item) => [item.key, 0])) as Record<string, number>;
+    const allCard = monthActualByLabel['2026-06'];
+    if (!allCard) return baseline;
+    // monthly alert uses totals from June actual map only
+    // keep existing per-item quick estimate from static categories
+    baseline.coupang = 0;
+    baseline.dining = 0;
+    baseline.lunch = 0;
+    baseline.maint = 0;
+    baseline.skt = 0;
+    baseline.fuel = 0;
+    baseline.lucky = 0;
+    // approximate split is not available in adjusted hook, so reuse no-warning default
+    return baseline;
+  }, [monthActualByLabel]);
+  const overBudgetItems = useMemo(
+    () =>
+      cardItems
+        .filter((item) => item.key !== 'lucky' && (cardActualByKey[item.key] ?? 0) > item.amount)
+        .map((item) => ({
+          name: item.name,
+          budget: item.amount,
+          actual: cardActualByKey[item.key] ?? 0,
+        })),
+    [cardActualByKey],
+  );
 
 
   return (
     <div style={{ padding: '0 0 40px' }}>
       <Title level={4} style={{ marginBottom: 20 }}>📊 재정 현황 대시보드</Title>
+      {overBudgetItems.length > 0 && (
+        <Alert
+          type="warning"
+          showIcon
+          style={{ marginBottom: 14 }}
+          message={`예산 초과 항목 ${overBudgetItems.length}건`}
+          description={
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+                gap: 8,
+                marginTop: 4,
+              }}
+            >
+              {overBudgetItems.map((item) => (
+                <div
+                  key={item.name}
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    background: '#fff1f2',
+                    border: '1px solid #fecdd3',
+                    borderRadius: 10,
+                    padding: '8px 10px',
+                  }}
+                >
+                  <Text strong style={{ color: '#9f1239' }}>{item.name}</Text>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <Text type="secondary" style={{ fontSize: 12 }}>
+                      {fmt(item.actual)} / {fmt(item.budget)}
+                    </Text>
+                    <Text style={{ color: '#dc2626', fontWeight: 700 }}>
+                      +{fmt(item.actual - item.budget)}
+                    </Text>
+                  </div>
+                </div>
+              ))}
+            </div>
+          }
+        />
+      )}
 
       {/* 주요 KPI */}
       <Row gutter={[14, 14]} style={{ marginBottom: 20 }}>
@@ -125,20 +203,40 @@ export function Dashboard() {
             <div style={{ marginBottom: 8 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
                 <Text style={{ fontSize: 12 }}>🏦 은행 고정비</Text>
-                <Text strong>{fmt(BANK_TOTAL)}</Text>
+                <Text strong>{fmt(liveBankUsage)} / {fmt(BANK_TOTAL)}</Text>
               </div>
-              <Progress percent={Math.round(BANK_TOTAL / MONTHLY_TOTAL * 100)} strokeColor="#6366f1" size="small" />
+              <Progress
+                percent={Math.min(200, Math.round((liveBankUsage / Math.max(BANK_TOTAL, 1)) * 100))}
+                strokeColor={liveBankUsage <= BANK_TOTAL ? '#6366f1' : '#ef4444'}
+                size="small"
+              />
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 2 }}>
+                <Text style={{ fontSize: 11, color: bankGap >= 0 ? '#22c55e' : '#ef4444' }}>
+                  {bankGap >= 0 ? `잔여 ${fmt(bankGap)}` : `초과 ${fmt(Math.abs(bankGap))}`}
+                </Text>
+              </div>
             </div>
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
                 <Text style={{ fontSize: 12 }}>💳 카드 항목</Text>
-                <Text strong>{fmt(CARD_TOTAL)}</Text>
+                <Text strong>{fmt(liveCardUsage)} / {fmt(CARD_TOTAL)}</Text>
               </div>
-              <Progress percent={Math.round(CARD_TOTAL / MONTHLY_TOTAL * 100)} strokeColor="#22c55e" size="small" />
+              <Progress
+                percent={Math.min(200, Math.round((liveCardUsage / Math.max(CARD_TOTAL, 1)) * 100))}
+                strokeColor={liveCardUsage <= CARD_TOTAL ? '#22c55e' : '#ef4444'}
+                size="small"
+              />
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 2 }}>
+                <Text style={{ fontSize: 11, color: cardGap >= 0 ? '#22c55e' : '#ef4444' }}>
+                  {cardGap >= 0 ? `잔여 ${fmt(cardGap)}` : `초과 ${fmt(Math.abs(cardGap))}`}
+                </Text>
+              </div>
             </div>
             <div style={{ textAlign: 'right', marginTop: 10, paddingTop: 10, borderTop: '1px solid #f0f0f0' }}>
-              <Text type="secondary" style={{ fontSize: 11 }}>총 예산 </Text>
-              <Text strong style={{ fontSize: 16 }}>{fmt(MONTHLY_TOTAL)}</Text>
+              <Text type="secondary" style={{ fontSize: 11 }}>총 실사용 / 총 예산 </Text>
+              <Text strong style={{ fontSize: 16 }}>
+                {fmt(liveBankUsage + liveCardUsage)} / {fmt(MONTHLY_TOTAL)}
+              </Text>
             </div>
           </Card>
         </Col>
@@ -156,7 +254,7 @@ export function Dashboard() {
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Text style={{ fontSize: 12 }}>6월 25일 카드 결제</Text>
-                <Tag color="red">-1,580,000원</Tag>
+                <Tag color="red">-{liveCardUsage.toLocaleString()}원</Tag>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Text style={{ fontSize: 12 }}>6월 15일 헬스장 등록 (카드)</Text>
@@ -166,6 +264,8 @@ export function Dashboard() {
           </Card>
         </Col>
       </Row>
+
+      
     </div>
   );
 }

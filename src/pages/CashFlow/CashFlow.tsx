@@ -1,8 +1,9 @@
 import { Card, Col, Row, Table, Tag, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { Bar, BarChart, CartesianGrid, Cell, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import { cashFlowData, INITIAL_BALANCE, type CashFlowRow } from '@/data/cashflow';
+import { INITIAL_BALANCE, type CashFlowRow } from '@/data/cashflow';
 import { MONTHLY_TOTAL, MONTHLY_SAVINGS } from '@/data/budget';
+import { useAdjustedCashflow } from '@/hooks/useAdjustedCashflow';
 
 const { Title, Text } = Typography;
 const columns: ColumnsType<CashFlowRow> = [
@@ -48,7 +49,9 @@ const columns: ColumnsType<CashFlowRow> = [
 ];
 
 export function CashFlow() {
-  const chartData = cashFlowData.map(r => ({
+  const { cashflow } = useAdjustedCashflow();
+
+  const chartData = cashflow.map(r => ({
     name: r.label.replace('2026-', '').replace('2027-', '') + (r.year === 2027 ? "'" : ''),
     잔액: r.balance,
     label: r.label,
@@ -63,7 +66,7 @@ export function CashFlow() {
           { label: '현재 잔액', value: INITIAL_BALANCE, color: '#ef4444', sub: '마이너스 통장' },
           { label: '월 총 예산', value: -MONTHLY_TOTAL, color: '#f59e0b', sub: '지출 합계' },
           { label: '월 순저축', value: MONTHLY_SAVINGS, color: '#22c55e', sub: '예산 준수 시' },
-          { label: '2026년 말', value: cashFlowData.filter(r => r.year === 2026).at(-1)!.balance, color: '#6366f1', sub: '예측 잔액' },
+          { label: '2026년 말', value: cashflow.filter(r => r.year === 2026).at(-1)!.balance, color: '#6366f1', sub: '예측 잔액' },
         ].map(({ label, value, color, sub }) => (
           <Col xs={12} sm={6} key={label}>
             <Card size="small" styles={{ body: { padding: 14, textAlign: 'center' } }}>
@@ -102,7 +105,7 @@ export function CashFlow() {
 
       <Card title="월별 상세 내역" size="small">
         <Table<CashFlowRow>
-          dataSource={cashFlowData}
+          dataSource={cashflow}
           columns={columns}
           rowKey="label"
           pagination={false}
