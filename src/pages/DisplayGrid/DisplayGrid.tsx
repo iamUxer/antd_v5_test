@@ -254,7 +254,7 @@ export function DisplayGrid() {
         */}
       <SearchingCollapse
         columnGrid={3}
-        verticalLayout
+        verticalGrid
         verticalRows={Math.ceil(12 / 3)}
       >
         {/* 같은 열에 있는 요소는 같은 label너비를 가지는 클래스를 사용 */}
@@ -365,7 +365,7 @@ export function DisplayGrid() {
       <h2>3 Columns - rowSpan, Favorite Item(4 Columns/5 Columns 공통)</h2>
       <SearchingCollapse
         columnGrid={3}
-        verticalLayout
+        verticalGrid
         verticalRows={Math.ceil(12 / 3)}
       >
         {/* 같은 컬럼에 있는 요소는 같은 label너비를 가지는 클래스를 사용 */}
@@ -415,7 +415,7 @@ export function DisplayGrid() {
         */}
       <SearchingCollapse
         columnGrid={4}
-        verticalLayout
+        verticalGrid
         verticalRows={Math.ceil(16 / 4)}
       >
         {/* 세로 채움 기준으로 같은 컬럼(c1~c4)에 같은 label 클래스를 적용
@@ -443,7 +443,7 @@ export function DisplayGrid() {
         */}
       <SearchingCollapse
         columnGrid={5}
-        verticalLayout
+        verticalGrid
         verticalRows={Math.ceil(20 / 5)}
       >
         {/* 세로 채움 기준으로 같은 컬럼(c1~c5)에 같은 label 클래스를 적용

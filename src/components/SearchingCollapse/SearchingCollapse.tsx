@@ -6,7 +6,7 @@ type SearchingCollapseProps = {
   children: ReactNode;
   className?: string;
   columnGrid?: 3 | 4 | 5;
-  verticalLayout?: boolean;
+  verticalGrid?: boolean;
   /**
    * vertical-layout에서 column-flow를 사용할 때 "컬럼당 아이템 몇 개씩 쌓을지"를 지정.
    * - 이 값이 있어야 다음 컬럼으로 넘어가며, 데이터 건수 변화에 맞춰 동적으로 계산해 전달한다.
@@ -21,7 +21,7 @@ export function SearchingCollapse({
   children,
   className,
   columnGrid,
-  verticalLayout,
+  verticalGrid,
   verticalRows,
   scrollableHeight,
   style,
@@ -41,7 +41,7 @@ export function SearchingCollapse({
 
   return (
     <div
-      className={`search-collapse ${columnGridClass} ${verticalLayout ? 'vertical-layout' : ''} ${className ?? ''}`.trim()}
+      className={`search-collapse ${columnGridClass} ${verticalGrid ? 'vertical-grid' : ''} ${className ?? ''}`.trim()}
       style={{ ...verticalRowsStyle, ...scrollableHeightStyle, ...style }}
     >
       <Form>{children}</Form>
