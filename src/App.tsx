@@ -4,17 +4,19 @@ import { Dashboard } from '@/pages/Dashboard/Dashboard';
 import { Budget } from '@/pages/Budget/Budget';
 import { CashFlow } from '@/pages/CashFlow/CashFlow';
 import { Spending } from '@/pages/Spending/Spending';
+import { DisplayGrid } from './pages/DisplayGrid/DisplayGrid';
 
 export default function App() {
   return (
     <BrowserRouter>
       <AppShell>
         <Routes>
-          <Route path="/"          element={<Dashboard />} />
-          <Route path="/budget"    element={<Budget />} />
-          <Route path="/cashflow"  element={<CashFlow />} />
-          <Route path="/spending"  element={<Spending />} />
-          <Route path="*"          element={<Navigate to="/" replace />} />
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/budget" element={<Budget />} />
+          <Route path="/cashflow" element={<CashFlow />} />
+          <Route path="/spending" element={<Spending />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="/displaygrid" element={<DisplayGrid />} />
         </Routes>
       </AppShell>
     </BrowserRouter>

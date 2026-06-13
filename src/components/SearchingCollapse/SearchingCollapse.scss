@@ -1,0 +1,94 @@
+.search-collapse {
+  padding: 20px;
+  background-color: #fff;
+  border: 1px solid #000;
+  overflow: scroll;
+  .ant-form {
+    display: grid;
+    gap: 12px;
+  }
+  &.grid-3-columns {
+    .ant-form {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  &.grid-4-columns {
+    .ant-form {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  &.grid-5-columns {
+    .ant-form {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+  }
+  &.vertical-layout {
+    .ant-form {
+      display: grid;
+      grid-template-rows: repeat(var(--vertical-rows, 4), minmax(0, auto));
+      grid-auto-flow: column;
+      row-gap: 4px;
+    }
+
+    &.grid-3-columns {
+      .ant-form {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+    &.grid-4-columns {
+      .ant-form {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+    &.grid-5-columns {
+      .ant-form {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+    }
+
+    .ant-form-item {
+      .ant-form-item-control-input-content > * + * {
+        margin-top: 10px;
+      }
+    }
+  }
+
+  .ant-form-item {
+    margin-bottom: 0;
+    /* 그리드 아이템 확장: Form.Item에 className="col-span-2" 지정 시 2칸 차지 */
+
+    &.col-span-2 {
+      grid-column: span 2;
+    }
+
+    &.row-span-2 {
+      grid-row: span 2;
+    }
+  }
+
+  label {
+    // !important 삭제 필요
+    display: inline-block !important;
+    max-width: 110px !important;
+    width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .label-sm {
+    label {
+      width: 60px;
+    }
+  }
+  .label-md {
+    label {
+      width: 90px;
+    }
+  }
+  .label-lg {
+    label {
+      width: 110px;
+    }
+  }
+}
