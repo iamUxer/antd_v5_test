@@ -20,12 +20,7 @@ export function DisplayGrid() {
           label="Form1 Item1"
           rules={[{ required: true }]}
         >
-          <Select
-            options={[
-              { label: 'Option 1', value: '1' },
-              { label: 'Option 2', value: '2' },
-            ]}
-          />
+          <Select options={[]} />
         </Form.Item>
         <Form.Item
           className="label-width-md"
@@ -33,12 +28,7 @@ export function DisplayGrid() {
           label="Form1 Item2"
           rules={[{ required: false }]}
         >
-          <Select
-            options={[
-              { label: 'Option 1', value: '1' },
-              { label: 'Option 2', value: '2' },
-            ]}
-          />
+          <Select options={[]} />
         </Form.Item>
         <Form.Item
           className="label-width-lg"
@@ -46,12 +36,7 @@ export function DisplayGrid() {
           label="Form1 Item3 Text Overflow Test"
           rules={[{ required: false }]}
         >
-          <Select
-            options={[
-              { label: 'Option 1', value: '1' },
-              { label: 'Option 2', value: '2' },
-            ]}
-          />
+          <Select options={[]} />
         </Form.Item>
 
         <Form.Item
@@ -60,12 +45,7 @@ export function DisplayGrid() {
           label="Form1 Item4"
           rules={[{ required: true }]}
         >
-          <Select
-            options={[
-              { label: 'Option 1', value: '1' },
-              { label: 'Option 2', value: '2' },
-            ]}
-          />
+          <Select options={[]} />
         </Form.Item>
         <Form.Item
           className="label-width-md"
@@ -73,12 +53,7 @@ export function DisplayGrid() {
           label="Form1 Item5"
           rules={[{ required: false }]}
         >
-          <Select
-            options={[
-              { label: 'Option 1', value: '1' },
-              { label: 'Option 2', value: '2' },
-            ]}
-          />
+          <Select options={[]} />
         </Form.Item>
         <Form.Item
           className="label-width-lg"
@@ -86,12 +61,7 @@ export function DisplayGrid() {
           label="Form1 Item6"
           rules={[{ required: false }]}
         >
-          <Select
-            options={[
-              { label: 'Option 1', value: '1' },
-              { label: 'Option 2', value: '2' },
-            ]}
-          />
+          <Select options={[]} />
         </Form.Item>
 
         <Form.Item
@@ -100,12 +70,7 @@ export function DisplayGrid() {
           label="Form1 Item7"
           rules={[{ required: true }]}
         >
-          <Select
-            options={[
-              { label: 'Option 1', value: '1' },
-              { label: 'Option 2', value: '2' },
-            ]}
-          />
+          <Select options={[]} />
         </Form.Item>
         <Form.Item
           className="label-width-md"
@@ -113,12 +78,7 @@ export function DisplayGrid() {
           label="Form1 Item8"
           rules={[{ required: false }]}
         >
-          <Select
-            options={[
-              { label: 'Option 1', value: '1' },
-              { label: 'Option 2', value: '2' },
-            ]}
-          />
+          <Select options={[]} />
         </Form.Item>
         <Form.Item
           className="label-width-lg"
@@ -126,12 +86,7 @@ export function DisplayGrid() {
           label="Form1 Item9"
           rules={[{ required: false }]}
         >
-          <Select
-            options={[
-              { label: 'Option 1', value: '1' },
-              { label: 'Option 2', value: '2' },
-            ]}
-          />
+          <Select options={[]} />
         </Form.Item>
 
         <Form.Item
@@ -140,12 +95,7 @@ export function DisplayGrid() {
           label="Form1 Item10"
           rules={[{ required: true }]}
         >
-          <Select
-            options={[
-              { label: 'Option 1', value: '1' },
-              { label: 'Option 2', value: '2' },
-            ]}
-          />
+          <Select options={[]} />
         </Form.Item>
         <Form.Item
           className="label-width-md"
@@ -153,12 +103,7 @@ export function DisplayGrid() {
           label="Form1 Item11"
           rules={[{ required: false }]}
         >
-          <Select
-            options={[
-              { label: 'Option 1', value: '1' },
-              { label: 'Option 2', value: '2' },
-            ]}
-          />
+          <Select options={[]} />
         </Form.Item>
         <Form.Item
           className="label-width-lg"
@@ -166,12 +111,7 @@ export function DisplayGrid() {
           label="Form1 Item12"
           rules={[{ required: false }]}
         >
-          <Select
-            options={[
-              { label: 'Option 1', value: '1' },
-              { label: 'Option 2', value: '2' },
-            ]}
-          />
+          <Select options={[]} />
         </Form.Item>
       </SearchingCollapse>
 
@@ -188,12 +128,7 @@ export function DisplayGrid() {
           label="Form2 Item1"
           rules={[{ required: true }]}
         >
-          <Select
-            options={[
-              { label: 'Option 1', value: '1' },
-              { label: 'Option 2', value: '2' },
-            ]}
-          />
+          <Select options={[]} />
         </Form.Item>
         <Form.Item
           className="label-width-md col-span-2"
@@ -201,12 +136,7 @@ export function DisplayGrid() {
           label="Form2 Item2"
           rules={[{ required: false }]}
         >
-          <Select
-            options={[
-              { label: 'Option 1', value: '1' },
-              { label: 'Option 2', value: '2' },
-            ]}
-          />
+          <Select options={[]} />
         </Form.Item>
 
         <Form.Item
@@ -215,12 +145,7 @@ export function DisplayGrid() {
           label="Form2 Item3"
           rules={[{ required: true }]}
         >
-          <Select
-            options={[
-              { label: 'Option 1', value: '1' },
-              { label: 'Option 2', value: '2' },
-            ]}
-          />
+          <Select options={[]} />
         </Form.Item>
         <Form.Item
           className="label-width-lg"
@@ -228,12 +153,7 @@ export function DisplayGrid() {
           label="Form2 Item4"
           rules={[{ required: false }]}
         >
-          <Select
-            options={[
-              { label: 'Option 1', value: '1' },
-              { label: 'Option 2', value: '2' },
-            ]}
-          />
+          <Select options={[]} />
         </Form.Item>
 
         <Form.Item
@@ -242,12 +162,7 @@ export function DisplayGrid() {
           label="Form2 Item5"
           rules={[{ required: true }]}
         >
-          <Select
-            options={[
-              { label: 'Option 1', value: '1' },
-              { label: 'Option 2', value: '2' },
-            ]}
-          />
+          <Select options={[]} />
         </Form.Item>
         <Form.Item
           className="label-width-md"
@@ -255,12 +170,7 @@ export function DisplayGrid() {
           label="Form2 Item6"
           rules={[{ required: false }]}
         >
-          <Select
-            options={[
-              { label: 'Option 1', value: '1' },
-              { label: 'Option 2', value: '2' },
-            ]}
-          />
+          <Select options={[]} />
         </Form.Item>
         <Form.Item
           className="label-width-lg"
@@ -268,12 +178,7 @@ export function DisplayGrid() {
           label="Form2 Item7"
           rules={[{ required: false }]}
         >
-          <Select
-            options={[
-              { label: 'Option 1', value: '1' },
-              { label: 'Option 2', value: '2' },
-            ]}
-          />
+          <Select options={[]} />
         </Form.Item>
 
         <Form.Item
@@ -282,12 +187,7 @@ export function DisplayGrid() {
           label="Form2 Item8"
           rules={[{ required: true }]}
         >
-          <Select
-            options={[
-              { label: 'Option 1', value: '1' },
-              { label: 'Option 2', value: '2' },
-            ]}
-          />
+          <Select options={[]} />
         </Form.Item>
         <Form.Item
           className="label-width-md"
@@ -295,12 +195,7 @@ export function DisplayGrid() {
           label="Form2 Item9"
           rules={[{ required: false }]}
         >
-          <Select
-            options={[
-              { label: 'Option 1', value: '1' },
-              { label: 'Option 2', value: '2' },
-            ]}
-          />
+          <Select options={[]} />
         </Form.Item>
         <Form.Item
           className="label-width-lg"
@@ -308,12 +203,7 @@ export function DisplayGrid() {
           label="Form2 Item10"
           rules={[{ required: false }]}
         >
-          <Select
-            options={[
-              { label: 'Option 1', value: '1' },
-              { label: 'Option 2', value: '2' },
-            ]}
-          />
+          <Select options={[]} />
         </Form.Item>
       </SearchingCollapse>
 
@@ -331,12 +221,7 @@ export function DisplayGrid() {
             label={`Form3 Item${idx}`}
             rules={[{ required: false }]}
           >
-            <Select
-              options={[
-                { label: 'Option 1', value: '1' },
-                { label: 'Option 2', value: '2' },
-              ]}
-            />
+            <Select options={[]} />
           </Form.Item>
         ))}
       </SearchingCollapse>
@@ -357,12 +242,7 @@ export function DisplayGrid() {
             label={`Form4 Item${idx}`}
             rules={[{ required: false }]}
           >
-            <Select
-              options={[
-                { label: 'Option 1', value: '1' },
-                { label: 'Option 2', value: '2' },
-              ]}
-            />
+            <Select options={[]} />
           </Form.Item>
         ))}
       </SearchingCollapse>
@@ -382,12 +262,7 @@ export function DisplayGrid() {
             label={`Form5 Item${idx}`}
             rules={[{ required: false }]}
           >
-            <Select
-              options={[
-                { label: 'Option 1', value: '1' },
-                { label: 'Option 2', value: '2' },
-              ]}
-            />
+            <Select options={[]} />
           </Form.Item>
         ))}
       </SearchingCollapse>
@@ -416,12 +291,7 @@ export function DisplayGrid() {
           label="Form6 Item1"
           rules={[{ required: true }]}
         >
-          <Select
-            options={[
-              { label: 'Option 1', value: '1' },
-              { label: 'Option 2', value: '2' },
-            ]}
-          />
+          <Select options={[]} />
         </Form.Item>
         <Form.Item
           className="label-width-sm"
@@ -429,12 +299,7 @@ export function DisplayGrid() {
           label="Form6 Item2"
           rules={[{ required: false }]}
         >
-          <Select
-            options={[
-              { label: 'Option 1', value: '1' },
-              { label: 'Option 2', value: '2' },
-            ]}
-          />
+          <Select options={[]} />
         </Form.Item>
         <Form.Item
           className="label-width-sm"
@@ -442,12 +307,7 @@ export function DisplayGrid() {
           label="Form6 Item3"
           rules={[{ required: true }]}
         >
-          <Select
-            options={[
-              { label: 'Option 1', value: '1' },
-              { label: 'Option 2', value: '2' },
-            ]}
-          />
+          <Select options={[]} />
         </Form.Item>
         <Form.Item
           className="label-width-sm"
@@ -455,12 +315,7 @@ export function DisplayGrid() {
           label="Form6 Item4"
           rules={[{ required: false }]}
         >
-          <Select
-            options={[
-              { label: 'Option 1', value: '1' },
-              { label: 'Option 2', value: '2' },
-            ]}
-          />
+          <Select options={[]} />
         </Form.Item>
 
         <Form.Item
@@ -469,12 +324,7 @@ export function DisplayGrid() {
           label="Form6 Item5"
           rules={[{ required: true }]}
         >
-          <Select
-            options={[
-              { label: 'Option 1', value: '1' },
-              { label: 'Option 2', value: '2' },
-            ]}
-          />
+          <Select options={[]} />
         </Form.Item>
         <Form.Item
           className="label-width-md"
@@ -482,12 +332,7 @@ export function DisplayGrid() {
           label="Form6 Item6"
           rules={[{ required: false }]}
         >
-          <Select
-            options={[
-              { label: 'Option 1', value: '1' },
-              { label: 'Option 2', value: '2' },
-            ]}
-          />
+          <Select options={[]} />
         </Form.Item>
         <Form.Item
           className="label-width-md"
@@ -495,12 +340,7 @@ export function DisplayGrid() {
           label="Form6 Item7"
           rules={[{ required: true }]}
         >
-          <Select
-            options={[
-              { label: 'Option 1', value: '1' },
-              { label: 'Option 2', value: '2' },
-            ]}
-          />
+          <Select options={[]} />
         </Form.Item>
         <Form.Item
           className="label-width-md"
@@ -508,12 +348,7 @@ export function DisplayGrid() {
           label="Form6 Item8"
           rules={[{ required: false }]}
         >
-          <Select
-            options={[
-              { label: 'Option 1', value: '1' },
-              { label: 'Option 2', value: '2' },
-            ]}
-          />
+          <Select options={[]} />
         </Form.Item>
 
         <Form.Item
@@ -522,12 +357,7 @@ export function DisplayGrid() {
           label="Form6 Item9"
           rules={[{ required: true }]}
         >
-          <Select
-            options={[
-              { label: 'Option 1', value: '1' },
-              { label: 'Option 2', value: '2' },
-            ]}
-          />
+          <Select options={[]} />
         </Form.Item>
         <Form.Item
           className="label-width-lg"
@@ -535,12 +365,7 @@ export function DisplayGrid() {
           label="Form6 Item10"
           rules={[{ required: false }]}
         >
-          <Select
-            options={[
-              { label: 'Option 1', value: '1' },
-              { label: 'Option 2', value: '2' },
-            ]}
-          />
+          <Select options={[]} />
         </Form.Item>
         <Form.Item
           className="label-width-lg"
@@ -548,12 +373,7 @@ export function DisplayGrid() {
           label="Form6 Item11"
           rules={[{ required: true }]}
         >
-          <Select
-            options={[
-              { label: 'Option 1', value: '1' },
-              { label: 'Option 2', value: '2' },
-            ]}
-          />
+          <Select options={[]} />
         </Form.Item>
         <Form.Item
           className="label-width-lg"
@@ -561,12 +381,7 @@ export function DisplayGrid() {
           label="Form6 Item12"
           rules={[{ required: false }]}
         >
-          <Select
-            options={[
-              { label: 'Option 1', value: '1' },
-              { label: 'Option 2', value: '2' },
-            ]}
-          />
+          <Select options={[]} />
         </Form.Item>
       </SearchingCollapse>
 
@@ -599,21 +414,11 @@ export function DisplayGrid() {
           rules={[{ required: false }]}
         >
           <Form.Item name="Form7-Item1a" noStyle>
-            <Select
-              options={[
-                { label: 'Option 1', value: '1' },
-                { label: 'Option 2', value: '2' },
-              ]}
-            />
+            <Select options={[]} />
           </Form.Item>
 
           <Form.Item name="Form7-Item1b" noStyle>
-            <Select
-              options={[
-                { label: 'Option 1', value: '1' },
-                { label: 'Option 2', value: '2' },
-              ]}
-            />
+            <Select options={[]} />
           </Form.Item>
         </Form.Item>
         {Array.from({ length: 9 }, (_, idx) => idx).map((idx: number) => (
@@ -624,12 +429,7 @@ export function DisplayGrid() {
             label={`Form7 Item${idx}`}
             rules={[{ required: false }]}
           >
-            <Select
-              options={[
-                { label: 'Option 1', value: '1' },
-                { label: 'Option 2', value: '2' },
-              ]}
-            />
+            <Select options={[]} />
           </Form.Item>
         ))}
       </SearchingCollapse>
@@ -651,12 +451,7 @@ export function DisplayGrid() {
             label={`Form4 Item${idx}`}
             rules={[{ required: false }]}
           >
-            <Select
-              options={[
-                { label: 'Option 1', value: '1' },
-                { label: 'Option 2', value: '2' },
-              ]}
-            />
+            <Select options={[]} />
           </Form.Item>
         ))}
       </SearchingCollapse>
@@ -678,12 +473,7 @@ export function DisplayGrid() {
             label={`Form5 Item${idx}`}
             rules={[{ required: false }]}
           >
-            <Select
-              options={[
-                { label: 'Option 1', value: '1' },
-                { label: 'Option 2', value: '2' },
-              ]}
-            />
+            <Select options={[]} />
           </Form.Item>
         ))}
       </SearchingCollapse>
@@ -703,12 +493,7 @@ export function DisplayGrid() {
             label={`Form10 Item${idx}`}
             rules={[{ required: false }]}
           >
-            <Select
-              options={[
-                { label: 'Option 1', value: '1' },
-                { label: 'Option 2', value: '2' },
-              ]}
-            />
+            <Select options={[]} />
           </Form.Item>
         ))}
       </SearchingCollapse>
