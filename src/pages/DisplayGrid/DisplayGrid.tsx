@@ -115,20 +115,16 @@ export function DisplayGrid() {
         </Form.Item>
       </SearchingCollapse>
 
-      <h2>colSpan 적용(3열/4열/5열 그리드 공통 적용)</h2>
+      <h2>3열 아이템 - colSpan, Favorite 아이템 적용(4열/5열 공통 적용)</h2>
       {/* 3열 그리드에서 colSpan 적용 예시: 첫번째 아이템은 1칸, 두번째 아이템은 2칸 차지
         className="col-span-2" 추가
         col-span-2 적용시, Form.Item 1개가 2개 컬럼을 차지함에 따라 label 너비 클래스 적용하는 계산식이 바뀔것으로 예상
         4열, 5열 그리드에서도 동일하게 적용해야함.
         */}
       <SearchingCollapse className="grid-3-columns">
-        <Form.Item
-          className="label-width-sm"
-          name="Form2-Item1"
-          label="Form2 Item1"
-          rules={[{ required: true }]}
-        >
-          <Select options={[]} />
+        {/* Favorite 아이템은 추후 컴포넌트 적용 가능 */}
+        <Form.Item className="label-width-lg" name="Form3-Favorite">
+          Favorite
         </Form.Item>
         <Form.Item
           className="label-width-md col-span-2"
@@ -207,26 +203,7 @@ export function DisplayGrid() {
         </Form.Item>
       </SearchingCollapse>
 
-      <h2>Favorite 아이템 적용(3열/4열/5열 그리드 공통 적용)</h2>
-      <SearchingCollapse className="grid-3-columns">
-        {/* Favorite 아이템은 추후 컴포넌트 적용 가능 */}
-        <Form.Item className="label-width-lg" name="Form3-Favorite">
-          Favorite
-        </Form.Item>
-        {Array.from({ length: 11 }, (_, idx) => idx).map((idx: number) => (
-          <Form.Item
-            key={idx}
-            className="label-width-lg"
-            name={`Form3-Item${idx}`}
-            label={`Form3 Item${idx}`}
-            rules={[{ required: false }]}
-          >
-            <Select options={[]} />
-          </Form.Item>
-        ))}
-      </SearchingCollapse>
-
-      <h2>4열 그리드</h2>
+      <h2>4열 아이템</h2>
       {/* 같은 열에 있는 요소는 같은 label너비를 가지는 클래스를 사용 */}
       {/* 4열 그리드 예시: 첫번째와 다섯번째 아이템이 같은열,
         두번째와 여섯번째 아이템이 같은열, 세번째와 일곱번째 아이템이 같은열,
@@ -247,7 +224,7 @@ export function DisplayGrid() {
         ))}
       </SearchingCollapse>
 
-      <h2>5열 그리드</h2>
+      <h2>5열 아이템</h2>
       {/* 같은 열에 있는 요소는 같은 label너비를 가지는 클래스를 사용 */}
       {/* 5열 그리드 예시: 첫번째와 여섯번째, 두번째와 일곱번째, 세번째와 여덟번째,
         네번째와 아홉번째, 다섯번째와 열번째 아이템이 같은열이 있음
@@ -270,7 +247,7 @@ export function DisplayGrid() {
       <Divider />
 
       <h1>세로 정렬</h1>
-      <h2>3열 그리드</h2>
+      <h2>3열 아이템</h2>
       {/* 세로 정렬은 grid-auto-flow: column 방식이라 rows 제한이 있어야 다음 열로 흐른다.
           따라서 verticalRows는 "전체 item 수 / 열 수" 기반으로 계산해서 넘긴다.
           (현재 예시: 12개 아이템, 3열 => 4행)
@@ -385,7 +362,7 @@ export function DisplayGrid() {
         </Form.Item>
       </SearchingCollapse>
 
-      <h2>3열 검색 영역 - rowSpan, Favorite 아이템 적용, 4열/5열 공통 적용</h2>
+      <h2>3열 아이템 - rowSpan, Favorite 아이템 적용, 4열/5열 공통 적용</h2>
       {/* 세로 정렬은 grid-auto-flow: column 방식이라 rows 제한이 있어야 다음 열로 흐른다.
           따라서 verticalRows는 "전체 item 수 / 열 수" 기반으로 계산해서 넘긴다.
           (현재 예시: 12개 아이템, 3열 => 4행)
@@ -434,7 +411,7 @@ export function DisplayGrid() {
         ))}
       </SearchingCollapse>
 
-      <h2>4열 검색 영역</h2>
+      <h2>4열 아이템</h2>
       <SearchingCollapse
         className="grid-4-columns vertical-layout"
         verticalRows={Math.ceil(16 / 4)}
@@ -456,7 +433,7 @@ export function DisplayGrid() {
         ))}
       </SearchingCollapse>
 
-      <h2>5열 검색 영역</h2>
+      <h2>5열 아이템</h2>
       <SearchingCollapse
         className="grid-5-columns vertical-layout"
         verticalRows={Math.ceil(20 / 5)}
@@ -478,9 +455,9 @@ export function DisplayGrid() {
         ))}
       </SearchingCollapse>
 
-      <h2>Scrollable 적용(검색 영역 공통 적용)</h2>
+      <h2>Scrollable 적용(전체 공통 적용)</h2>
       {/* 스크롤 영역 height 속성 인라인 스타일로 추가 */}
-      <SearchingCollapse className="grid-3-columns" style={{ height: 200 }}>
+      <SearchingCollapse className="grid-3-columns" style={{ height: 180 }}>
         {/* Favorite 아이템은 추후 컴포넌트 적용 가능 */}
         <Form.Item className="label-width-sm" name="Form10-Favorite">
           Favorite
