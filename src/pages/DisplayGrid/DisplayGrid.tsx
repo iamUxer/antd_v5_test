@@ -4,11 +4,11 @@ import { Divider, Form, Select } from 'antd';
 export function DisplayGrid() {
   return (
     <>
-      {/* 같은 열에 같은 너비 지정을 위해,
-        같은 열에 있는 요소는 같은 label너비를 가지는 클래스 지정이 가능해야 함 */}
+      {/* 같은 열의 라벨에 동일한 너비 지정을 위해,
+        같은 열의 요소는 동일한 label 클래스 지정이 가능해야 함 */}
       <h1>가로 정렬</h1>
       <h2>3열 그리드</h2>
-      {/* 같은 열에 있는 요소는 같은 label너비를 가지는 클래스를 사용 */}
+      {/* 같은 열의 요소는 동일한 label 클래스 사용 */}
       {/* 3열 그리드 예시: 첫번째와 네번째 아이템이 같은열,
         두번째와 다섯번째 아이템이 같은열, 세번째와 여섯번째 아이템이 같은열
         props 입력(columnLabelClasses는 예시임): columnLabelClasses={['label-width-sm', 'label-width-md', 'label-width-lg']} (같은 열에 같은 label 너비 클래스를 적용)
