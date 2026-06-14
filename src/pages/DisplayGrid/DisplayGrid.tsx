@@ -4,16 +4,15 @@ import { Divider, Form, Select } from 'antd';
 export function DisplayGrid() {
   return (
     <>
-      {/* 같은 컬럼의 라벨에 동일한 너비 지정을 위해,
-        같은 컬럼의 요소는 동일한 label 클래스를 지정할 수 있게 props 입력이 가능해야 함*/}
+      {/* 같은 컬럼의 라벨에 동일한 너비 지정 => 같은 컬럼에 동일한 label-width-XX 클래스를 지정할 수 있게 props 입력이 가능해야 함. */}
       <h1>가로 정렬</h1>
       <h2>3 Columns</h2>
-      {/* 같은 컬럼의 요소는 동일한 label 클래스 사용 */}
-      {/* 3컬럼 예시: 첫번째와 네번째 아이템이 같은 컬럼,
-        두번째와 다섯번째 아이템이 같은 컬럼, 세번째와 여섯번째 아이템이 같은 컬럼
-        props 입력(columnLabelClasses는 예시임): columnLabelClasses={['label-width-sm', 'label-width-md', 'label-width-lg']} (같은 열에 같은 label 너비 클래스를 적용)
+      {/* 3컬럼 예시: (name기준)아이템 1, 4, 7이 같은 컬럼,
+        아이템 2, 5, 8이 같은 컬럼, 아이템 3, 6, 9가 같은 컬럼.
+        props 입력(columnLabelWidth는 예시임): columnLabelWidth={['sm', 'md', 'lg']}
         */}
       <SearchingCollapse columnGrid={3}>
+        {/* 아이템 1, 4, 7에 label-width-sm 클래스를 적용 */}
         <Form.Item
           className="label-width-sm"
           name="Form1-Item1"
@@ -22,6 +21,7 @@ export function DisplayGrid() {
         >
           <Select options={[]} />
         </Form.Item>
+        {/* 아이템 2, 5, 8에 label-width-md 클래스를 적용 */}
         <Form.Item
           className="label-width-md"
           name="Form1-Item2"
@@ -30,6 +30,7 @@ export function DisplayGrid() {
         >
           <Select options={[]} />
         </Form.Item>
+        {/* 아이템 3, 6, 9에 label-width-lg 클래스를 적용 */}
         <Form.Item
           className="label-width-lg"
           name="Form1-Item3"
@@ -116,12 +117,13 @@ export function DisplayGrid() {
       </SearchingCollapse>
 
       <h2>3 Columns - colSpan, Favorite Item(4 Columns/5 Columns 햐공통)</h2>
-      {/* className="col-span-2" 추가
-        col-span-2 적용시, Form.Item 1개가 2개 컬럼을 차지함에 따라 label 너비 클래스 적용하는 계산식이 바뀔것으로 예상
+      {/* className="col-span-2" 추가를 위한 props 입력 필요
+        col-span-2 적용시, Form.Item 1개가 2개 컬럼을 차지함에 따라 label 너비 클래스 적용하는 계산식이 바뀔것으로 예상됨.
+        col-span-2 적용 아이템 1개 이상으로 예상됨.
         4컬럼, 5컬럼 그리드에서도 동일하게 적용해야함.
         */}
       <SearchingCollapse columnGrid={3}>
-        {/* Favorite 아이템은 추후 컴포넌트 적용 가능 */}
+        {/* Favorite 아이템은 추후 컴포넌트 적용 가능. */}
         <Form.Item className="label-width-lg" name="Form3-Favorite">
           Favorite
         </Form.Item>
@@ -203,14 +205,14 @@ export function DisplayGrid() {
       </SearchingCollapse>
 
       <h2>4 Columns</h2>
-      {/* 같은 컬럼에 있는 요소는 같은 label너비를 가지는 클래스를 사용 */}
-      {/* 4컬럼 그리드 예시: 첫번째와 다섯번째 아이템이 같은 컬럼,
-        두번째와 여섯번째 아이템이 같은 컬럼, 세번째와 일곱번째 아이템이 같은 컬럼,
-        네번째와 여덟번째 아이템이 같은 컬럼
-        props 입력(columnLabelClasses는 예시임): columnLabelClasses={['label-width-sm', 'label-width-md', 'label-width-lg', 'label-width-md']}
+      {/* 4컬럼 그리드 예시: (name기준)아이템 1, 5, 9, 13이 같은 컬럼,
+        아이템 2, 6, 10, 14가 같은 컬럼, 아이템 3, 7, 11, 15가 같은 컬럼,
+        아이템 4, 8, 12, 16이 같은 컬럼.
+        props 입력(columnLabelWidth는 예시임): columnLabelWidth={['sm', 'md', 'lg', 'md']}
         */}
       <SearchingCollapse columnGrid={4}>
-        {Array.from({ length: 12 }, (_, idx) => idx).map((idx: number) => (
+        {/* 마크업 간소화를 위한 임시 코드 */}
+        {Array.from({ length: 16 }, (_, idx) => idx + 1).map((idx: number) => (
           <Form.Item
             key={idx}
             className="label-width-md"
@@ -224,13 +226,14 @@ export function DisplayGrid() {
       </SearchingCollapse>
 
       <h2>5 Columns</h2>
-      {/* 같은 컬럼에 있는 요소는 같은 label너비를 가지는 클래스를 사용 */}
-      {/* 5컬럼 그리드 예시: 첫번째와 여섯번째, 두번째와 일곱번째, 세번째와 여덟번째,
-        네번째와 아홉번째, 다섯번째와 열번째 아이템이 같은 컬럼이 있음
-        props 입력(columnLabelClasses는 예시임): columnLabelClasses={['label-width-sm', 'label-width-md', 'label-width-lg', 'label-width-md', 'label-width-sm']}
+      {/* 5컬럼 그리드 예시: (name기준)아이템 1, 6, 11, 16, 21이 같은 컬럼,
+        아이템 2, 7, 12, 17, 22가 같은 컬럼, 아이템 3, 8, 13, 18, 23가 같은 컬럼,
+        아이템 4, 9, 14, 19, 24가 같은 컬럼, 아이템 5, 10, 15, 20, 25가 같은 컬럼.
+        props 입력(columnLabelWidth는 예시임): columnLabelWidth={['sm', 'md', 'lg', 'md', 'sm']}
         */}
       <SearchingCollapse columnGrid={5}>
-        {Array.from({ length: 15 }, (_, idx) => idx).map((idx: number) => (
+        {/* 마크업 간소화를 위한 임시 코드 */}
+        {Array.from({ length: 20 }, (_, idx) => idx + 1).map((idx: number) => (
           <Form.Item
             key={idx}
             className="label-width-sm"
@@ -247,21 +250,21 @@ export function DisplayGrid() {
 
       <h1>세로 정렬</h1>
       <h2>3 Columns</h2>
-      {/* 세로 정렬은 grid-auto-flow: column 방식이라 rows 제한이 있어야 다음 열로 흐른다.
-          따라서 verticalRows는 "전체 item 수 / 열 수" 기반으로 계산해서 넘긴다.
-          (현재 예시: 12개 아이템, 3열 => 4행)
-          props 입력 예시: verticalRows={Math.ceil(itemCount / columnCount)}
+      {/* 세로 정렬은 grid-auto-flow: column 방식이라 row개수 제한이 있어야 다음 컬럼으로 흐른다.
+          따라서 verticalRows는 "전체 item 수 / 컬럼 수" 기반으로 계산해서 넘긴다.
+          (현재 예시: 12개 아이템, 3컬럼 => 4rows)
+          props 입력 예시: verticalRows={Math.ceil(itemCount / columnCount)} => Math.ceil(12 / 3) => 4
         */}
       <SearchingCollapse
         columnGrid={3}
         verticalGrid
         verticalRows={Math.ceil(12 / 3)}
       >
-        {/* 같은 열에 있는 요소는 같은 label너비를 가지는 클래스를 사용 */}
-        {/* 세로 채움 기준으로 같은 열(c1/c2/c3)에 같은 label 클래스를 적용
+        {/* 세로 채움 기준으로 같은 컬럼(c1/c2/c3)에 같은 label 클래스를 적용
             c1 -> label-width-sm, c2 -> label-width-md, c3 -> label-width-lg 
-            props 입력(columnLabelClasses는 예시임): columnLabelClasses={['label-width-sm', 'label-width-md', 'label-width-lg']}
+            props 입력(columnLabelWidth는 예시임): columnLabelWidth={['sm', 'md', 'lg']}
         */}
+        {/* 아이템 1, 2, 3, 4 같은 label-width-sm 클래스를 적용 */}
         <Form.Item
           className="label-width-sm"
           name="Form6-Item1"
@@ -295,6 +298,7 @@ export function DisplayGrid() {
           <Select options={[]} />
         </Form.Item>
 
+        {/* 아이템 5, 6, 7, 8 같은 label-width-md 클래스를 적용 */}
         <Form.Item
           className="label-width-md"
           name="Form6-Item5"
@@ -328,6 +332,7 @@ export function DisplayGrid() {
           <Select options={[]} />
         </Form.Item>
 
+        {/* 아이템 9, 10, 11, 12 같은 label-width-lg 클래스를 적용 */}
         <Form.Item
           className="label-width-lg"
           name="Form6-Item9"
@@ -368,10 +373,9 @@ export function DisplayGrid() {
         verticalGrid
         verticalRows={Math.ceil(12 / 3)}
       >
-        {/* 같은 컬럼에 있는 요소는 같은 label너비를 가지는 클래스를 사용 */}
         {/* 세로 채움 기준으로 같은 컬럼(c1/c2/c3)에 같은 label 클래스를 적용
             c1 -> label-width-sm, c2 -> label-width-md, c3 -> label-width-lg 
-            props 입력(columnLabelClasses는 예시임): columnLabelClasses={['label-width-sm', 'label-width-md', 'label-width-lg']}
+            props 입력(columnLabelWidth는 예시임): columnLabelWidth={['sm', 'md', 'lg']}
         */}
         <Form.Item
           className="label-width-sm"
@@ -394,7 +398,8 @@ export function DisplayGrid() {
             <Select options={[]} />
           </Form.Item>
         </Form.Item>
-        {Array.from({ length: 9 }, (_, idx) => idx).map((idx: number) => (
+        {/* 마크업 간소화를 위한 임시 코드 */}
+        {Array.from({ length: 9 }, (_, idx) => idx + 2).map((idx: number) => (
           <Form.Item
             key={idx}
             className="label-width-sm"
@@ -408,10 +413,10 @@ export function DisplayGrid() {
       </SearchingCollapse>
 
       <h2>4 Columns</h2>
-      {/* 세로 정렬은 grid-auto-flow: column 방식이라 rows 제한이 있어야 다음 컬럼으로 흐른다.
+      {/* 세로 정렬은 grid-auto-flow: column 방식이라 row개수 제한이 있어야 다음 컬럼으로 흐른다.
           따라서 verticalRows는 "전체 item 수 / 컬럼 수" 기반으로 계산해서 넘긴다.
-          (현재 예시: 16개 아이템, 4컬럼 => 4행)
-          props 입력 예시: verticalRows={Math.ceil(itemCount / columnCount)}
+          (현재 예시: 16개 아이템, 4컬럼 => 4rows)
+          props 입력 예시: verticalRows={Math.ceil(itemCount / columnCount)} => Math.ceil(16 / 4) => 4
         */}
       <SearchingCollapse
         columnGrid={4}
@@ -420,9 +425,10 @@ export function DisplayGrid() {
       >
         {/* 세로 채움 기준으로 같은 컬럼(c1~c4)에 같은 label 클래스를 적용
             c1 -> label-width-sm, c2 -> label-width-md, c3 -> label-width-lg, c4 -> label-width-md
-            props 입력(columnLabelClasses는 예시임): columnLabelClasses={['label-width-sm', 'label-width-md', 'label-width-lg', 'label-width-md']}
+            props 입력(columnLabelWidth는 예시임): columnLabelWidth={['sm', 'md', 'lg', 'md']}
         */}
-        {Array.from({ length: 16 }, (_, idx) => idx).map((idx: number) => (
+        {/* 마크업 간소화를 위한 임시 코드 */}
+        {Array.from({ length: 16 }, (_, idx) => idx + 1).map((idx: number) => (
           <Form.Item
             key={idx}
             className="label-width-sm"
@@ -436,10 +442,10 @@ export function DisplayGrid() {
       </SearchingCollapse>
 
       <h2>5 Columns</h2>
-      {/* 세로 정렬은 grid-auto-flow: column 방식이라 rows 제한이 있어야 다음 컬럼으로 흐른다.
+      {/* 세로 정렬은 grid-auto-flow: column 방식이라 row개수 제한이 있어야 다음 컬럼으로 흐른다.
           따라서 verticalRows는 "전체 item 수 / 컬럼 수" 기반으로 계산해서 넘긴다.
-          (현재 예시: 20개 아이템, 5컬럼 => 4행)
-          props 입력 예시: verticalRows={Math.ceil(itemCount / columnCount)}
+          (현재 예시: 20개 아이템, 5컬럼 => 4rows)
+          props 입력 예시: verticalRows={Math.ceil(itemCount / columnCount)} => Math.ceil(20 / 5) => 4
         */}
       <SearchingCollapse
         columnGrid={5}
@@ -448,9 +454,10 @@ export function DisplayGrid() {
       >
         {/* 세로 채움 기준으로 같은 컬럼(c1~c5)에 같은 label 클래스를 적용
             c1 -> label-width-sm, c2 -> label-width-md, c3 -> label-width-lg, c4 -> label-width-md, c5 -> label-width-sm
-            props 입력(columnLabelClasses는 예시임): columnLabelClasses={['label-width-sm', 'label-width-md', 'label-width-lg', 'label-width-md', 'label-width-sm']}
+            props 입력(columnLabelWidth는 예시임): columnLabelWidth={['sm', 'md', 'lg', 'md', 'sm']}
         */}
-        {Array.from({ length: 20 }, (_, idx) => idx).map((idx: number) => (
+        {/* 마크업 간소화를 위한 임시 코드 */}
+        {Array.from({ length: 20 }, (_, idx) => idx + 1).map((idx: number) => (
           <Form.Item
             key={idx}
             className="label-width-md"
@@ -470,7 +477,8 @@ export function DisplayGrid() {
         <Form.Item className="label-width-sm" name="Form10-Favorite">
           Favorite
         </Form.Item>
-        {Array.from({ length: 20 }, (_, idx) => idx).map((idx: number) => (
+        {/* 마크업 간소화를 위한 임시 코드 */}
+        {Array.from({ length: 20 }, (_, idx) => idx + 2).map((idx: number) => (
           <Form.Item
             key={idx}
             className="label-width-md"
