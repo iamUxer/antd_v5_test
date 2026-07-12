@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import {
   AllCommunityModule,
@@ -30,34 +31,6 @@ const defaultColDef: ColDef<GridRow> = {
   wrapText: true,
   autoHeight: true,
 };
-
-const columnDefs: ColDef<GridRow>[] = [
-  {
-    field: 'headMain',
-    headerName: 'H1',
-    width: 90,
-    cellClassRules: { 'aggrid-head-wide': ({ data }) => isFullHeadRow(data) },
-    spanRows: ({ nodeA, nodeB }) => {
-      const groupA = nodeA?.data?.headRowMerge;
-      const groupB = nodeB?.data?.headRowMerge;
-      return !!groupA && groupA === groupB;
-    },
-    pinned: 'left',
-  },
-  {
-    field: 'headSub',
-    headerName: '',
-    width: 90,
-    cellClassRules: {
-      'aggrid-head-sub-hidden': ({ data }) => isFullHeadRow(data),
-    },
-    pinned: 'left',
-  },
-  { field: 'h2', headerName: 'H2', flex: 1, minWidth: 160 },
-  { field: 'h3', headerName: 'H3', flex: 1, minWidth: 160 },
-  { field: 'h4', headerName: 'H4', flex: 1, minWidth: 160 },
-  { field: 'h5', headerName: 'H5', flex: 1, minWidth: 160 },
-];
 
 const rowData: GridRow[] = [
   {
@@ -113,11 +86,59 @@ const rowData: GridRow[] = [
   },
 ];
 
-export function Aggrid() {
+type AggridProps = {
+  headMainWidth?: number;
+  headSubWidth?: number;
+  headBgColor?: string;
+  height?: number;
+};
+
+export function Aggrid({
+  headMainWidth = 90,
+  headSubWidth = 90,
+  height = 360,
+}: AggridProps) {
+  const columnDefs: ColDef<GridRow>[] = [
+    {
+      field: 'headMain',
+      headerName: 'H1',
+      width: headMainWidth,
+      cellClassRules: { 'aggrid-head-wide': ({ data }) => isFullHeadRow(data) },
+      spanRows: ({ nodeA, nodeB }) => {
+        const groupA = nodeA?.data?.headRowMerge;
+        const groupB = nodeB?.data?.headRowMerge;
+        return !!groupA && groupA === groupB;
+      },
+      pinned: 'left',
+    },
+    {
+      field: 'headSub',
+      headerName: '',
+      width: headSubWidth,
+      cellClassRules: {
+        'aggrid-head-sub-hidden': ({ data }) => isFullHeadRow(data),
+      },
+      pinned: 'left',
+    },
+    { field: 'h2', headerName: 'H2', flex: 1, minWidth: 160 },
+    { field: 'h3', headerName: 'H3', flex: 1, minWidth: 160 },
+    { field: 'h4', headerName: 'H4', flex: 1, minWidth: 160 },
+    { field: 'h5', headerName: 'H5', flex: 1, minWidth: 160 },
+  ];
+
+  const containerStyle: CSSProperties & Record<string, string | number> = {
+    width: '100%',
+    height,
+    '--head-main-width': `${headMainWidth}px`,
+    '--head-sub-width': `${headSubWidth}px`,
+    '--head-area-width': `${headMainWidth + headSubWidth}px`,
+    '--head-half-width': `${headMainWidth}px`,
+  };
+
   return (
     <div
       className="ag-theme-quartz aggrid-custom-header"
-      style={{ width: '100%', height: 360 }}
+      style={containerStyle}
     >
       <AgGridReact<GridRow>
         rowData={rowData}

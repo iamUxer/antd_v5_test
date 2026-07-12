@@ -1,17 +1,11 @@
 .aggrid-custom-header {
-  $head-main-width: 90px;
-  $head-area-width: 180px;
-  $head-half-width: $head-area-width / 2;
-  $head-bg: #f0f0f0;
-
   .ag-header-cell[col-id='headSub'] {
     display: none;
   }
 
   .ag-header-cell[col-id='headMain'] {
-    width: $head-area-width !important;
-    max-width: $head-area-width;
-    background-color: $head-bg;
+    width: var(--head-area-width) !important;
+    max-width: var(--head-area-width);
 
     .ag-header-cell-label {
       justify-content: center;
@@ -21,7 +15,7 @@
 
   .ag-cell[col-id='headMain'],
   .ag-cell[col-id='headSub'] {
-    background-color: $head-bg;
+    background-color: var(--head-bg);
   }
 
   .ag-cell[col-id='headMain'] .ag-cell-value,
@@ -32,10 +26,10 @@
 
   /* H1-2~4: headMain이 2칸을 쓰는 것처럼 보이게 처리 */
   .ag-cell[col-id='headMain'].aggrid-head-wide {
-    width: $head-area-width !important;
-    margin-right: -$head-main-width;
+    width: var(--head-area-width) !important;
+    margin-right: calc(-1 * var(--head-main-width));
     z-index: 1;
-    background-color: $head-bg;
+    background-color: var(--head-bg);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -55,7 +49,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: $head-bg;
+    background-color: var(--head-bg);
     font-weight: 600;
 
     .ag-cell-value {
@@ -74,25 +68,25 @@
     position: sticky;
     left: 0 !important;
     right: auto !important;
-    width: $head-half-width !important;
-    min-width: $head-half-width !important;
-    max-width: $head-half-width !important;
+    width: var(--head-half-width) !important;
+    min-width: var(--head-half-width) !important;
+    max-width: var(--head-half-width) !important;
     /* H1-1 span 셀 렌더 안정화용: 사용자가 확인한 필수 높이 */
     .ag-grid-pinned-left-cells {
       height: 74px;
-      width: 90px !important;
+      width: var(--head-main-width) !important;
     }
   }
 
   .ag-spanning-container.ag-grid-scrolling-spanned-cells-container .ag-row {
-    width: $head-half-width !important;
+    width: var(--head-half-width) !important;
   }
 
   .ag-spanning-container.ag-grid-scrolling-spanned-cells-container
     .ag-cell[col-id='headMain'] {
-    width: $head-half-width !important;
-    min-width: $head-half-width !important;
-    max-width: $head-half-width !important;
+    width: var(--head-half-width) !important;
+    min-width: var(--head-half-width) !important;
+    max-width: var(--head-half-width) !important;
     margin-right: 0 !important;
   }
 
