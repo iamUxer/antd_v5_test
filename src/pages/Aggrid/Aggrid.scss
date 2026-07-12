@@ -1,11 +1,12 @@
 .aggrid-custom-header {
+  width: 100%;
   .ag-header-cell[col-id='headSub'] {
     display: none;
   }
 
   .ag-header-cell[col-id='headMain'] {
-    width: var(--head-area-width) !important;
-    max-width: var(--head-area-width);
+    width: calc(var(--head-main-width) * 2) !important;
+    max-width: calc(var(--head-main-width) * 2);
 
     .ag-header-cell-label {
       justify-content: center;
@@ -26,7 +27,7 @@
 
   /* H1-2~4: headMain이 2칸을 쓰는 것처럼 보이게 처리 */
   .ag-cell[col-id='headMain'].aggrid-head-wide {
-    width: var(--head-area-width) !important;
+    width: calc(var(--head-main-width) * 2) !important;
     margin-right: calc(-1 * var(--head-main-width));
     z-index: 1;
     background-color: var(--head-bg);
@@ -63,14 +64,33 @@
     line-height: 1.5;
   }
 
+  .aggrid-editor-input,
+  .aggrid-editor-select {
+    width: 100%;
+  }
+
+  .aggrid-editor-input {
+    .ant-input {
+      min-height: 28px;
+      font-size: 13px;
+    }
+  }
+
+  .aggrid-editor-select {
+    .ant-select-selector {
+      min-height: 28px !important;
+      font-size: 13px;
+    }
+  }
+
   /* pinned + spanRows 조합에서 spanning 컨테이너가 전체 그리드를 덮는 문제 방지 */
   .ag-spanning-container.ag-grid-scrolling-spanned-cells-container {
     position: sticky;
     left: 0 !important;
     right: auto !important;
-    width: var(--head-half-width) !important;
-    min-width: var(--head-half-width) !important;
-    max-width: var(--head-half-width) !important;
+    width: var(--head-main-width) !important;
+    min-width: var(--head-main-width) !important;
+    max-width: var(--head-main-width) !important;
     /* H1-1 span 셀 렌더 안정화용: 사용자가 확인한 필수 높이 */
     .ag-grid-pinned-left-cells {
       height: 74px;
@@ -79,14 +99,14 @@
   }
 
   .ag-spanning-container.ag-grid-scrolling-spanned-cells-container .ag-row {
-    width: var(--head-half-width) !important;
+    width: var(--head-main-width) !important;
   }
 
   .ag-spanning-container.ag-grid-scrolling-spanned-cells-container
     .ag-cell[col-id='headMain'] {
-    width: var(--head-half-width) !important;
-    min-width: var(--head-half-width) !important;
-    max-width: var(--head-half-width) !important;
+    width: var(--head-main-width) !important;
+    min-width: var(--head-main-width) !important;
+    max-width: var(--head-main-width) !important;
     margin-right: 0 !important;
   }
 
