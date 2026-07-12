@@ -80,6 +80,7 @@
     /* H1-1 span 셀 렌더 안정화용: 사용자가 확인한 필수 높이 */
     .ag-grid-pinned-left-cells {
       height: 74px;
+      width: 90px !important;
     }
   }
 
