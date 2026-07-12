@@ -1,0 +1,102 @@
+.aggrid-custom-header {
+  $head-main-width: 90px;
+  $head-area-width: 180px;
+  $head-half-width: $head-area-width / 2;
+  $head-bg: #f0f0f0;
+
+  .ag-header-cell[col-id='headSub'] {
+    display: none;
+  }
+
+  .ag-header-cell[col-id='headMain'] {
+    width: $head-area-width !important;
+    max-width: $head-area-width;
+    background-color: $head-bg;
+
+    .ag-header-cell-label {
+      justify-content: center;
+      font-weight: 600;
+    }
+  }
+
+  .ag-cell[col-id='headMain'],
+  .ag-cell[col-id='headSub'] {
+    background-color: $head-bg;
+  }
+
+  .ag-cell[col-id='headMain'] .ag-cell-value,
+  .ag-cell[col-id='headSub'] .ag-cell-value {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* H1-2~4: headMain이 2칸을 쓰는 것처럼 보이게 처리 */
+  .ag-cell[col-id='headMain'].aggrid-head-wide {
+    width: $head-area-width !important;
+    margin-right: -$head-main-width;
+    z-index: 1;
+    background-color: $head-bg;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+  }
+
+  .ag-cell[col-id='headSub'].aggrid-head-sub-hidden {
+    visibility: hidden;
+    pointer-events: none;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    background-color: transparent;
+  }
+
+  /* H1-1 rowSpan 셀 정렬 */
+  .ag-spanned-cell[col-id='headMain'] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $head-bg;
+    font-weight: 600;
+
+    .ag-cell-value {
+      width: 100%;
+      text-align: center;
+    }
+  }
+
+  .ag-cell {
+    white-space: normal;
+    line-height: 1.5;
+  }
+
+  /* pinned + spanRows 조합에서 spanning 컨테이너가 전체 그리드를 덮는 문제 방지 */
+  .ag-spanning-container.ag-grid-scrolling-spanned-cells-container {
+    position: sticky;
+    left: 0 !important;
+    right: auto !important;
+    width: $head-half-width !important;
+    min-width: $head-half-width !important;
+    max-width: $head-half-width !important;
+    /* H1-1 span 셀 렌더 안정화용: 사용자가 확인한 필수 높이 */
+    .ag-grid-pinned-left-cells {
+      height: 74px;
+    }
+  }
+
+  .ag-spanning-container.ag-grid-scrolling-spanned-cells-container .ag-row {
+    width: $head-half-width !important;
+  }
+
+  .ag-spanning-container.ag-grid-scrolling-spanned-cells-container
+    .ag-cell[col-id='headMain'] {
+    width: $head-half-width !important;
+    min-width: $head-half-width !important;
+    max-width: $head-half-width !important;
+    margin-right: 0 !important;
+  }
+
+  .ag-spanning-container.ag-grid-scrolling-spanned-cells-container
+    .ag-cell[col-id='headSub'] {
+    display: none !important;
+  }
+}

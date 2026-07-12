@@ -5,6 +5,7 @@ import { Budget } from '@/pages/Budget/Budget';
 import { CashFlow } from '@/pages/CashFlow/CashFlow';
 import { Spending } from '@/pages/Spending/Spending';
 import { DisplayGrid } from './pages/DisplayGrid/DisplayGrid';
+import { Aggrid } from './pages/Aggrid/Aggrid';
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
           <Route path="/spending" element={<Spending />} />
           <Route path="*" element={<Navigate to="/" replace />} />
           <Route path="/displaygrid" element={<DisplayGrid />} />
+          <Route path="/aggrid" element={<Aggrid />} />
         </Routes>
       </AppShell>
     </BrowserRouter>
