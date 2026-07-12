@@ -1,14 +1,22 @@
-import { useCallback, useMemo, useState, type CSSProperties } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+} from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { Input, Select } from 'antd';
 import {
   AllCommunityModule,
   ModuleRegistry,
   type ColDef,
+  type GridApi,
+  type GridReadyEvent,
   type ICellRendererParams,
 } from 'ag-grid-community';
 import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-quartz.css';
 import './Aggrid.scss';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -31,7 +39,8 @@ const headMainCellClassRules = {
   'aggrid-head-wide': ({ data }: { data?: GridRow }) => isFullHeadRow(data),
 };
 const headSubCellClassRules = {
-  'aggrid-head-sub-hidden': ({ data }: { data?: GridRow }) => isFullHeadRow(data),
+  'aggrid-head-sub-hidden': ({ data }: { data?: GridRow }) =>
+    isFullHeadRow(data),
 };
 
 const defaultColDef: ColDef<GridRow> = {
@@ -65,16 +74,6 @@ const initialRowData: GridRow[] = [
     h5: 'H5-1b',
   },
   {
-    id: 'row-3',
-    headRowMerge: 'block-1',
-    headMain: '',
-    headSub: 'H1-1c',
-    h2: 'H2-1c',
-    h3: 'H3-1c',
-    h4: 'H4-1c',
-    h5: 'H5-1c',
-  },
-  {
     id: 'row-4',
     headMain: 'H1-2',
     headSub: '',
@@ -101,21 +100,113 @@ const initialRowData: GridRow[] = [
     h4: 'H4-4',
     h5: 'H5-4',
   },
+  {
+    id: 'row-7',
+    headRowMerge: 'block-2',
+    headMain: 'H1-5',
+    headSub: 'H1-5a',
+    h2: 'H2-5',
+    h3: 'H3-5',
+    h4: 'H4-5',
+    h5: 'H5-5',
+  },
+  {
+    id: 'row-8',
+    headRowMerge: 'block-2',
+    headMain: '',
+    headSub: 'H1-5b',
+    h2: 'H2-5',
+    h3: 'H3-5',
+    h4: 'H4-5',
+    h5: 'H5-5',
+  },
+  {
+    id: 'row-9',
+    headRowMerge: 'block-2',
+    headMain: '',
+    headSub: 'H1-5c',
+    h2: 'H2-5',
+    h3: 'H3-5',
+    h4: 'H4-5',
+    h5: 'H5-5',
+  },
 ];
 
 type AggridProps = {
   headMainWidth?: number;
-  headSubWidth?: number;
   headBgColor?: string;
   height?: number;
 };
 
 export function Aggrid({
   headMainWidth = 90,
-  headSubWidth = 90,
-  height = 360,
+  headBgColor = '#f0f0f0',
+  height = 450,
 }: AggridProps) {
   const [rows, setRows] = useState<GridRow[]>(initialRowData);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const gridApiRef = useRef<GridApi<GridRow> | null>(null);
+
+  /*
+    headRowMerge로 묶인(2개 이상) 연속 로우들을 블록 단위로 추출.
+    ag-Grid의 spanRows + autoHeight 조합은 스팬된 헤더 셀의 높이를
+    하위 로우들의 auto height 재계산에 맞춰 갱신하지 않는 알려진 버그가 있어
+    (SpannedRowCtrl.onRowHeightChanged가 no-op으로 오버라이드됨),
+    실제 하위 로우 높이 합을 직접 구해서 강제로 적용해야 한다.
+  */
+  const spanGroups = useMemo(() => {
+    const groups: string[][] = [];
+    let current: string[] = [];
+    let currentKey: string | undefined;
+    rows.forEach((row) => {
+      if (row.headRowMerge && row.headRowMerge === currentKey) {
+        current.push(row.id);
+      } else {
+        if (current.length > 1) groups.push(current);
+        current = row.headRowMerge ? [row.id] : [];
+        currentKey = row.headRowMerge;
+      }
+    });
+    if (current.length > 1) groups.push(current);
+    return groups;
+  }, [rows]);
+
+  const syncSpanCellHeights = useCallback(() => {
+    const api = gridApiRef.current;
+    const container = containerRef.current;
+    if (!api || !container || spanGroups.length === 0) return;
+
+    const spannedHeaderCells = container.querySelectorAll<HTMLElement>(
+      ".ag-spanned-cell[col-id='headMain']",
+    );
+
+    spanGroups.forEach((ids, index) => {
+      const cellEl = spannedHeaderCells[index];
+      if (!cellEl) return;
+
+      const heights = ids.map((id) => api.getRowNode(id)?.rowHeight);
+      if (heights.some((h) => h == null)) return;
+
+      const totalHeight = heights.reduce<number>((sum, h) => sum + (h ?? 0), 0);
+      cellEl.style.setProperty('height', `${totalHeight}px`, 'important');
+    });
+  }, [spanGroups]);
+
+  const scheduleSyncSpanCellHeights = useCallback(() => {
+    requestAnimationFrame(() => requestAnimationFrame(syncSpanCellHeights));
+  }, [syncSpanCellHeights]);
+
+  const onGridReady = useCallback(
+    (event: GridReadyEvent<GridRow>) => {
+      gridApiRef.current = event.api;
+      scheduleSyncSpanCellHeights();
+    },
+    [scheduleSyncSpanCellHeights],
+  );
+
+  useEffect(() => {
+    scheduleSyncSpanCellHeights();
+  }, [rows, scheduleSyncSpanCellHeights]);
 
   const updateCell = useCallback(
     (rowId: string, field: EditableField, value: string) => {
@@ -134,47 +225,46 @@ export function Aggrid({
   );
 
   const renderTextField = useCallback(
-    (field: 'h2' | 'h4') =>
-      (params: ICellRendererParams<GridRow, string>) => {
-        const row = params.data;
-        if (!row) return null;
+    (field: 'h2' | 'h4') => (params: ICellRendererParams<GridRow, string>) => {
+      const row = params.data;
+      if (!row) return null;
 
-        return (
-          <Input
-            className="aggrid-editor-input"
-            value={row[field] ?? ''}
-            onChange={(event) => updateCell(row.id, field, event.target.value)}
-          />
-        );
-      },
+      return (
+        <Input
+          className="aggrid-editor-input"
+          value={row[field] ?? ''}
+          onChange={(event) => updateCell(row.id, field, event.target.value)}
+        />
+      );
+    },
     [updateCell],
   );
 
   const renderSelectField = useCallback(
-    (field: 'h3' | 'h5') =>
-      (params: ICellRendererParams<GridRow, string>) => {
-        const row = params.data;
-        if (!row) return null;
+    (field: 'h3' | 'h5') => (params: ICellRendererParams<GridRow, string>) => {
+      const row = params.data;
+      if (!row) return null;
 
-        const baseOptions = ['Option A', 'Option B', 'Option C'];
-        const currentValue = row[field] ?? '';
-        const options = baseOptions.includes(currentValue)
-          ? baseOptions
-          : currentValue
-            ? [currentValue, ...baseOptions]
-            : baseOptions;
+      const baseOptions = ['Option A', 'Option B', 'Option C'];
+      const currentValue = row[field] ?? '';
+      const options = baseOptions.includes(currentValue)
+        ? baseOptions
+        : currentValue
+          ? [currentValue, ...baseOptions]
+          : baseOptions;
 
-        return (
-          <Select
-            className="aggrid-editor-select"
-            value={currentValue}
-            options={options.map((option) => ({ label: option, value: option }))}
-            onChange={(value) => updateCell(row.id, field, value)}
-            getPopupContainer={(triggerNode) => triggerNode.parentElement ?? document.body}
-          >
-          </Select>
-        );
-      },
+      return (
+        <Select
+          className="aggrid-editor-select"
+          value={currentValue}
+          options={options.map((option) => ({ label: option, value: option }))}
+          onChange={(value) => updateCell(row.id, field, value)}
+          getPopupContainer={(triggerNode) =>
+            triggerNode.parentElement ?? document.body
+          }
+        ></Select>
+      );
+    },
     [updateCell],
   );
 
@@ -195,31 +285,64 @@ export function Aggrid({
       {
         field: 'headSub',
         headerName: '',
-        width: headSubWidth,
+        width: headMainWidth,
         cellClassRules: headSubCellClassRules,
         pinned: 'left',
       },
-      { field: 'h2', headerName: 'H2', flex: 1, cellRenderer: renderTextField('h2') },
-      { field: 'h3', headerName: 'H3', flex: 1, cellRenderer: renderSelectField('h3') },
-      { field: 'h4', headerName: 'H4', flex: 1, cellRenderer: renderTextField('h4') },
-      { field: 'h5', headerName: 'H5', flex: 1, cellRenderer: renderSelectField('h5') },
+      {
+        field: 'h2',
+        headerName: 'H2',
+        flex: 1,
+        cellRenderer: renderTextField('h2'),
+        minWidth: 160,
+      },
+      {
+        field: 'h3',
+        headerName: 'H3',
+        flex: 1,
+        cellRenderer: renderSelectField('h3'),
+        minWidth: 160,
+      },
+      {
+        field: 'h4',
+        headerName: 'H4',
+        flex: 1,
+        cellRenderer: renderTextField('h4'),
+        minWidth: 160,
+      },
+      {
+        field: 'h5',
+        headerName: 'H5',
+        flex: 1,
+        cellRenderer: renderSelectField('h5'),
+        minWidth: 160,
+      },
     ],
-    [headMainWidth, headSubWidth, renderSelectField, renderTextField],
+    [headMainWidth, renderSelectField, renderTextField],
   );
 
   const containerStyle: CSSProperties & Record<string, string | number> = {
     height,
     '--head-main-width': `${headMainWidth}px`,
+    '--head-bg': headBgColor,
   };
 
   return (
-    <div className="aggrid-custom-header" style={containerStyle}>
+    <div
+      ref={containerRef}
+      className="aggrid-custom-header"
+      style={containerStyle}
+    >
       <AgGridReact<GridRow>
         rowData={rows}
         columnDefs={columnDefs}
         enableCellSpan
         defaultColDef={defaultColDef}
         getRowId={({ data }) => data.id}
+        onGridReady={onGridReady}
+        onModelUpdated={scheduleSyncSpanCellHeights}
+        onFirstDataRendered={scheduleSyncSpanCellHeights}
+        onGridSizeChanged={scheduleSyncSpanCellHeights}
       />
     </div>
   );

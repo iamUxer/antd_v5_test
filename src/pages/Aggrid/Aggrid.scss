@@ -1,5 +1,6 @@
 .aggrid-custom-header {
   width: 100%;
+
   .ag-header-cell[col-id='headSub'] {
     display: none;
   }
@@ -17,35 +18,15 @@
   .ag-cell[col-id='headMain'],
   .ag-cell[col-id='headSub'] {
     background-color: var(--head-bg);
+
+    .ag-cell-value {
+      width: 100%;
+      text-align: center;
+    }
   }
 
-  .ag-cell[col-id='headMain'] .ag-cell-value,
-  .ag-cell[col-id='headSub'] .ag-cell-value {
-    width: 100%;
-    text-align: center;
-  }
-
-  /* H1-2~4: headMain이 2칸을 쓰는 것처럼 보이게 처리 */
-  .ag-cell[col-id='headMain'].aggrid-head-wide {
-    width: calc(var(--head-main-width) * 2) !important;
-    margin-right: calc(-1 * var(--head-main-width));
-    z-index: 1;
-    background-color: var(--head-bg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-  }
-
-  .ag-cell[col-id='headSub'].aggrid-head-sub-hidden {
-    visibility: hidden;
-    pointer-events: none;
-    border-left-color: transparent;
-    border-right-color: transparent;
-    background-color: transparent;
-  }
-
-  /* H1-1 rowSpan 셀 정렬 */
+  /* H1-2~4(가로 병합)와 H1-1(행 병합) 헤더 셀 공통 정렬 */
+  .ag-cell[col-id='headMain'].aggrid-head-wide,
   .ag-spanned-cell[col-id='headMain'] {
     display: flex;
     align-items: center;
@@ -59,6 +40,21 @@
     }
   }
 
+  /* H1-2~4: headMain이 2칸을 쓰는 것처럼 보이게 처리 */
+  .ag-cell[col-id='headMain'].aggrid-head-wide {
+    width: calc(var(--head-main-width) * 2) !important;
+    margin-right: calc(-1 * var(--head-main-width));
+    z-index: 1;
+  }
+
+  .ag-cell[col-id='headSub'].aggrid-head-sub-hidden {
+    visibility: hidden;
+    pointer-events: none;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    background-color: transparent;
+  }
+
   .ag-cell {
     white-space: normal;
     line-height: 1.5;
@@ -67,6 +63,7 @@
   .aggrid-editor-input,
   .aggrid-editor-select {
     width: 100%;
+    height: 24px;
   }
 
   .aggrid-editor-input {
@@ -85,33 +82,47 @@
 
   /* pinned + spanRows 조합에서 spanning 컨테이너가 전체 그리드를 덮는 문제 방지 */
   .ag-spanning-container.ag-grid-scrolling-spanned-cells-container {
-    position: sticky;
+    position: sticky !important;
     left: 0 !important;
     right: auto !important;
     width: var(--head-main-width) !important;
     min-width: var(--head-main-width) !important;
     max-width: var(--head-main-width) !important;
-    /* H1-1 span 셀 렌더 안정화용: 사용자가 확인한 필수 높이 */
+    z-index: 3;
+
+    /*
+      height를 고정하면 translateY(162px) 위치의 H1-5 셀이 컨테이너 밖에서 잘림.
+      height: 0 + overflow: visible로 레이아웃 공간 차지 없이 셀을 표시.
+    */
+    height: 0 !important;
+    overflow: visible !important;
+
     .ag-grid-pinned-left-cells {
-      height: 74px;
+      position: absolute !important;
+      top: 0;
+      overflow: visible !important;
       width: var(--head-main-width) !important;
     }
-  }
 
-  .ag-spanning-container.ag-grid-scrolling-spanned-cells-container .ag-row {
-    width: var(--head-main-width) !important;
-  }
+    .ag-row {
+      width: var(--head-main-width) !important;
+    }
 
-  .ag-spanning-container.ag-grid-scrolling-spanned-cells-container
     .ag-cell[col-id='headMain'] {
-    width: var(--head-main-width) !important;
-    min-width: var(--head-main-width) !important;
-    max-width: var(--head-main-width) !important;
-    margin-right: 0 !important;
-  }
+      /*
+        height는 여기서 지정하지 않는다. ag-Grid의 spanRows + autoHeight 조합은
+        하위 로우들의 auto height 재계산을 스팬 셀에 반영하지 못하는 버그가 있어서
+        (SpannedRowCtrl.onRowHeightChanged가 no-op), Aggrid.tsx의
+        syncSpanCellHeights에서 실제 로우 높이 합을 직접 계산해 인라인으로 덮어쓴다.
+      */
+      width: var(--head-main-width) !important;
+      min-width: var(--head-main-width) !important;
+      max-width: var(--head-main-width) !important;
+      margin-right: 0 !important;
+    }
 
-  .ag-spanning-container.ag-grid-scrolling-spanned-cells-container
     .ag-cell[col-id='headSub'] {
-    display: none !important;
+      display: none !important;
+    }
   }
 }
