@@ -132,6 +132,24 @@ const initialRowData: GridRow[] = [
   },
 ];
 
+/*
+  화면 맨 아래에 스크롤과 무관하게 고정되는 합계 로우.
+  ag-Grid의 pinnedBottomRowData 기능을 사용하며, headRowMerge/headSub가 없어
+  isFullHeadRow가 true가 되어 H1-2~4와 동일한 방식(aggrid-head-wide)으로
+  H1 영역 전체를 차지하는 헤더로 렌더링된다.
+*/
+const pinnedBottomRowData: GridRow[] = [
+  {
+    id: 'total',
+    headMain: 'Total',
+    headSub: '',
+    h2: '',
+    h3: '',
+    h4: '',
+    h5: '',
+  },
+];
+
 type AggridProps = {
   headMainWidth?: number;
   headBgColor?: string;
@@ -141,7 +159,7 @@ type AggridProps = {
 export function Aggrid({
   headMainWidth = 90,
   headBgColor = '#f0f0f0',
-  height = 450,
+  height = 260,
 }: AggridProps) {
   const [rows, setRows] = useState<GridRow[]>(initialRowData);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -335,6 +353,7 @@ export function Aggrid({
     >
       <AgGridReact<GridRow>
         rowData={rows}
+        pinnedBottomRowData={pinnedBottomRowData}
         columnDefs={columnDefs}
         enableCellSpan
         defaultColDef={defaultColDef}
