@@ -1,6 +1,21 @@
 .aggrid-custom-header {
   width: 100%;
 
+  /*
+    일반 .ag-row는 .ag-row-animation .ag-row 규칙으로
+    transition: transform .4s ease, top .4s ease, opacity .2s ease를 갖고,
+    최초 렌더 시 ag-opacity-zero 클래스를 opacity:0으로 붙였다가 제거해서
+    페이드인된다(RowCtrl.getInitialRowClasses). 스팬된 로우는 SpannedRowCtrl이
+    getInitialRowClasses를 완전히 오버라이드해서 이 로직을 전혀 타지 않으므로,
+    동일한 transition/애니메이션을 직접 재현한다.
+  */
+  .ag-spanned-row {
+    transition:
+      transform 0.4s ease,
+      top 0.4s ease,
+      opacity 0.2s ease;
+  }
+
   .ag-header-cell[col-id='headSub'] {
     display: none;
   }
@@ -75,19 +90,21 @@
 
   .aggrid-editor-select {
     .ant-select-selector {
-      min-height: 28px !important;
+      min-height: 28px;
       font-size: 13px;
     }
   }
 
   /* pinned + spanRows 조합에서 spanning 컨테이너가 전체 그리드를 덮는 문제 방지 */
   .ag-spanning-container.ag-grid-scrolling-spanned-cells-container {
-    position: sticky !important;
-    left: 0 !important;
-    right: auto !important;
+    /*
+      headMain이 pinned:'left'가 아닐 때는 sticky로 고정할 필요가 없다.
+      아래 .ag-has-left-pinned-cols 규칙에서 pinned일 때만 sticky로 덮어쓴다.
+    */
+    position: relative;
     width: var(--head-main-width) !important;
-    min-width: var(--head-main-width) !important;
-    max-width: var(--head-main-width) !important;
+    min-width: var(--head-main-width);
+    max-width: var(--head-main-width);
     z-index: 3;
 
     /*
@@ -95,12 +112,12 @@
       height: 0 + overflow: visible로 레이아웃 공간 차지 없이 셀을 표시.
     */
     height: 0 !important;
-    overflow: visible !important;
+    overflow: visible;
 
     .ag-grid-pinned-left-cells {
-      position: absolute !important;
+      position: absolute;
       top: 0;
-      overflow: visible !important;
+      overflow: visible;
       width: var(--head-main-width) !important;
     }
 
@@ -116,13 +133,26 @@
         syncSpanCellHeights에서 실제 로우 높이 합을 직접 계산해 인라인으로 덮어쓴다.
       */
       width: var(--head-main-width) !important;
-      min-width: var(--head-main-width) !important;
-      max-width: var(--head-main-width) !important;
-      margin-right: 0 !important;
+      min-width: var(--head-main-width);
+      max-width: var(--head-main-width);
+      margin-right: 0;
     }
 
     .ag-cell[col-id='headSub'] {
-      display: none !important;
+      display: none;
     }
+  }
+
+  /*
+    ag-Grid는 pinned:'left' 컬럼이 있을 때만 .ag-root에 ag-has-left-pinned-cols를
+    붙여준다(visibleCols.getLeftStickyColumnContainerWidth() > 0 기준). 이 클래스를
+    그대로 활용하면 React state 없이도 headMain의 pinned 여부에 따라 CSS만으로
+    sticky/relative를 자동 전환할 수 있다.
+  */
+  .ag-root.ag-has-left-pinned-cols
+    .ag-spanning-container.ag-grid-scrolling-spanned-cells-container {
+    position: sticky !important;
+    left: 0 !important;
+    right: auto !important;
   }
 }
